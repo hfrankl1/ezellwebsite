@@ -224,7 +224,12 @@ export async function POST(request: NextRequest) {
       
       return NextResponse.json(
         { success: true },
-        { status: 200 }
+        { 
+          status: 200,
+          headers: {
+            'Content-Type': 'application/json',
+          }
+        }
       )
     } catch (emailError: any) {
       console.error('Failed to send email. Error details:', {

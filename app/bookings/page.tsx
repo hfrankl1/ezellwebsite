@@ -26,15 +26,28 @@ export default function BookingsPage() {
         body: JSON.stringify(data),
       })
 
+      console.log('Response status:', response.status)
+      console.log('Response ok:', response.ok)
+      
       // Parse the JSON response
-      const result = await response.json()
+      let result
+      try {
+        result = await response.json()
+        console.log('Response data:', result)
+      } catch (jsonError) {
+        console.error('Failed to parse JSON:', jsonError)
+        setSubmitStatus('error')
+        setIsSubmitting(false)
+        return
+      }
       
       // Check both response status and success flag
       if (response.ok && result.success === true) {
+        console.log('Success! Setting success status')
         setSubmitStatus('success')
         e.currentTarget.reset()
       } else {
-        console.error('API error:', result)
+        console.error('API returned error. Status:', response.status, 'Result:', result)
         setSubmitStatus('error')
       }
     } catch (error) {
