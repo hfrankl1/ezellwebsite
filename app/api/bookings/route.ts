@@ -126,9 +126,18 @@ function createTransporter() {
 export async function POST(request: NextRequest) {
   try {
     const data = await request.json()
+    
+    // Log received data for debugging (without sensitive info)
+    console.log('Received booking inquiry:', {
+      type: data.type,
+      name: data.name,
+      email: data.email,
+      hasPhone: !!data.phone,
+    })
 
     // Validate required fields
     if (!data.name || !data.email) {
+      console.error('Validation failed: Missing name or email')
       return NextResponse.json(
         { success: false, error: 'Name and email are required' },
         { status: 400 }
@@ -137,6 +146,7 @@ export async function POST(request: NextRequest) {
 
     // Validate message/vision based on booking type
     if (data.type === 'photography' && !data.vision) {
+      console.error('Validation failed: Missing vision for photography booking')
       return NextResponse.json(
         { success: false, error: 'Please describe your vision for the session' },
         { status: 400 }
@@ -144,6 +154,7 @@ export async function POST(request: NextRequest) {
     }
 
     if (data.type === 'dj' && !data.energy) {
+      console.error('Validation failed: Missing energy description for DJ booking')
       return NextResponse.json(
         { success: false, error: 'Please describe the energy you\'re looking for' },
         { status: 400 }
@@ -151,8 +162,15 @@ export async function POST(request: NextRequest) {
     }
 
     // Check email configuration
-    if (!process.env.SMTP_HOST || !process.env.SMTP_PORT || !process.env.SMTP_USER || !process.env.SMTP_PASS || !process.env.BOOKINGS_EMAIL) {
-      console.error('Email configuration is missing. Required env vars: SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, BOOKINGS_EMAIL')
+    const missingEnvVars = []
+    if (!process.env.SMTP_HOST) missingEnvVars.push('SMTP_HOST')
+    if (!process.env.SMTP_PORT) missingEnvVars.push('SMTP_PORT')
+    if (!process.env.SMTP_USER) missingEnvVars.push('SMTP_USER')
+    if (!process.env.SMTP_PASS) missingEnvVars.push('SMTP_PASS')
+    if (!process.env.BOOKINGS_EMAIL) missingEnvVars.push('BOOKINGS_EMAIL')
+    
+    if (missingEnvVars.length > 0) {
+      console.error(`Email configuration is missing. Missing env vars: ${missingEnvVars.join(', ')}`)
       return NextResponse.json(
         { success: false, error: 'Email configuration is missing.' },
         { status: 500 }
@@ -183,24 +201,52 @@ export async function POST(request: NextRequest) {
 
     // Send email
     try {
-      await transporter.sendMail({
+      const mailOptions = {
         from: process.env.SMTP_USER!,
         to: process.env.BOOKINGS_EMAIL!,
         subject: subject,
         text: emailText,
         replyTo: data.email, // Allow direct reply to the customer
+      }
+      
+      console.log('Attempting to send email...', {
+        from: mailOptions.from,
+        to: mailOptions.to,
+        subject: mailOptions.subject,
       })
-
-      console.log(`Booking inquiry email sent successfully to ${process.env.BOOKINGS_EMAIL}`)
+      
+      const info = await transporter.sendMail(mailOptions)
+      
+      console.log('Email sent successfully:', {
+        messageId: info.messageId,
+        response: info.response,
+      })
       
       return NextResponse.json(
         { success: true },
         { status: 200 }
       )
     } catch (emailError: any) {
-      console.error('Failed to send email:', emailError)
+      console.error('Failed to send email. Error details:', {
+        message: emailError.message,
+        code: emailError.code,
+        command: emailError.command,
+        response: emailError.response,
+        responseCode: emailError.responseCode,
+      })
+      
+      // Provide more specific error message if possible
+      let errorMessage = 'Failed to send email.'
+      if (emailError.code === 'EAUTH') {
+        errorMessage = 'Email authentication failed. Please check SMTP credentials.'
+      } else if (emailError.code === 'ECONNECTION') {
+        errorMessage = 'Could not connect to email server. Please check SMTP settings.'
+      } else if (emailError.message) {
+        errorMessage = `Email error: ${emailError.message}`
+      }
+      
       return NextResponse.json(
-        { success: false, error: 'Failed to send email.' },
+        { success: false, error: errorMessage },
         { status: 500 }
       )
     }
