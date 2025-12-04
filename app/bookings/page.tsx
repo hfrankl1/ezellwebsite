@@ -13,7 +13,9 @@ export default function BookingsPage() {
     setIsSubmitting(true)
     setSubmitStatus('idle')
 
-    const formData = new FormData(e.currentTarget)
+    // Store form reference before async operations
+    const form = e.currentTarget
+    const formData = new FormData(form)
     const data = Object.fromEntries(formData.entries())
     data.type = activeTab
 
@@ -45,7 +47,10 @@ export default function BookingsPage() {
       if (response.ok && result.success === true) {
         console.log('Success! Setting success status')
         setSubmitStatus('success')
-        e.currentTarget.reset()
+        // Reset form if it still exists
+        if (form) {
+          form.reset()
+        }
       } else {
         console.error('API returned error. Status:', response.status, 'Result:', result)
         setSubmitStatus('error')
