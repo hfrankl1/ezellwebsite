@@ -1,6 +1,5 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
-import { motion } from 'framer-motion'
 
 export const metadata: Metadata = {
   title: 'Journal',
@@ -36,26 +35,16 @@ export default function JournalPage() {
   return (
     <div className="pt-24 pb-20 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16"
-        >
+        <div className="text-center mb-16">
           <h1 className="text-4xl md:text-6xl font-bold mb-4">Journal</h1>
           <p className="text-lg text-white/70">
             Behind-the-scenes stories, moodboards, and thoughts on art, culture, and music.
           </p>
-        </motion.div>
+        </div>
 
         <div className="space-y-8">
-          {journalPosts.map((post, index) => (
-            <motion.article
-              key={post.slug}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1, duration: 0.5 }}
-            >
+          {journalPosts.map((post) => (
+            <article key={post.slug}>
               <Link href={`/journal/${post.slug}`} className="group block">
                 <div className="bg-white/5 rounded-lg p-8 border border-white/10 hover:border-wine/50 transition-colors">
                   <div className="flex items-center gap-4 mb-3 text-sm text-white/50">
@@ -83,7 +72,7 @@ export default function JournalPage() {
                   </div>
                 </div>
               </Link>
-            </motion.article>
+            </article>
           ))}
         </div>
       </div>

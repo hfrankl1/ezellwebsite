@@ -313,7 +313,7 @@ export default function BookingsPage() {
 
             {submitStatus === 'success' && (
               <div className="bg-green-500/20 border border-green-500/50 rounded px-4 py-3 text-green-400">
-                Thank you for your inquiry! We'll be in touch soon.
+                Thank you for your inquiry! We&apos;ll be in touch soon.
               </div>
             )}
 
