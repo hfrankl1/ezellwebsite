@@ -1,30 +1,127 @@
 import { NextRequest, NextResponse } from 'next/server'
+import nodemailer from 'nodemailer'
 import { siteConfig } from '@/config/site'
 
 /**
  * Booking API Route
  * 
- * This endpoint handles booking form submissions.
- * Currently, it logs the submission and returns a success response.
+ * Handles booking form submissions and sends emails via Nodemailer.
  * 
- * To integrate with an email service (like SendGrid or Postmark):
- * 1. Install the email service SDK
- * 2. Add your API key to .env.local
- * 3. Replace the console.log with actual email sending logic
- * 
- * Example with SendGrid:
- * ```typescript
- * import sgMail from '@sendgrid/mail'
- * sgMail.setApiKey(process.env.SENDGRID_API_KEY!)
- * 
- * await sgMail.send({
- *   to: process.env.BOOKINGS_EMAIL || siteConfig.primaryEmail,
- *   from: 'noreply@ezellfranklin.com',
- *   subject: `New ${data.type} Booking Inquiry`,
- *   html: formatBookingEmail(data),
- * })
- * ```
+ * Environment variables required:
+ * - BOOKINGS_EMAIL: Destination email address
+ * - SMTP_USER: Gmail/Workspace login email
+ * - SMTP_PASS: Google App Password
+ * - SMTP_HOST: SMTP server host (e.g., smtp.gmail.com)
+ * - SMTP_PORT: SMTP server port (e.g., 465)
  */
+
+/**
+ * Formats booking data into a readable plain-text email
+ */
+function formatBookingEmail(data: any): string {
+  const lines: string[] = []
+  
+  lines.push('NEW BOOKING INQUIRY')
+  lines.push('='.repeat(50))
+  lines.push('')
+  
+  // Basic contact info
+  lines.push('CONTACT INFORMATION')
+  lines.push('-'.repeat(50))
+  lines.push(`Name: ${data.name}`)
+  lines.push(`Email: ${data.email}`)
+  if (data.phone) {
+    lines.push(`Phone: ${data.phone}`)
+  }
+  lines.push('')
+  
+  // Booking type specific fields
+  if (data.type === 'photography') {
+    lines.push('PHOTOGRAPHY BOOKING DETAILS')
+    lines.push('-'.repeat(50))
+    if (data.sessionType) {
+      lines.push(`Session Type: ${data.sessionType}`)
+    }
+    if (data.date) {
+      lines.push(`Desired Date: ${data.date}`)
+    }
+    if (data.location) {
+      lines.push(`Location: ${data.location}`)
+    }
+    if (data.referral) {
+      lines.push(`How they heard about you: ${data.referral}`)
+    }
+    if (data.vision) {
+      lines.push('')
+      lines.push('VISION/MESSAGE:')
+      lines.push(data.vision)
+    }
+  } else if (data.type === 'dj') {
+    lines.push('DJ BOOKING DETAILS')
+    lines.push('-'.repeat(50))
+    if (data.setType) {
+      lines.push(`Set Type: ${data.setType}`)
+    }
+    if (data.eventDate) {
+      lines.push(`Event Date: ${data.eventDate}`)
+    }
+    if (data.eventTime) {
+      lines.push(`Event Time: ${data.eventTime}`)
+    }
+    if (data.eventLocation) {
+      lines.push(`Event Location: ${data.eventLocation}`)
+    }
+    if (data.venueType) {
+      lines.push(`Venue Type: ${data.venueType}`)
+    }
+    if (data.djReferral) {
+      lines.push(`How they heard about you: ${data.djReferral}`)
+    }
+    if (data.energy) {
+      lines.push('')
+      lines.push('ENERGY/VIBE REQUESTED:')
+      lines.push(data.energy)
+    }
+  }
+  
+  lines.push('')
+  lines.push('='.repeat(50))
+  lines.push(`Submitted: ${new Date().toLocaleString()}`)
+  
+  return lines.join('\n')
+}
+
+/**
+ * Creates and returns a Nodemailer transporter
+ */
+function createTransporter() {
+  // Validate required environment variables
+  const requiredEnvVars = {
+    SMTP_HOST: process.env.SMTP_HOST,
+    SMTP_PORT: process.env.SMTP_PORT,
+    SMTP_USER: process.env.SMTP_USER,
+    SMTP_PASS: process.env.SMTP_PASS,
+    BOOKINGS_EMAIL: process.env.BOOKINGS_EMAIL,
+  }
+  
+  const missing = Object.entries(requiredEnvVars)
+    .filter(([_, value]) => !value)
+    .map(([key]) => key)
+  
+  if (missing.length > 0) {
+    throw new Error(`Missing required environment variables: ${missing.join(', ')}`)
+  }
+  
+  return nodemailer.createTransport({
+    host: process.env.SMTP_HOST!,
+    port: Number(process.env.SMTP_PORT!),
+    secure: true, // true for 465, false for other ports
+    auth: {
+      user: process.env.SMTP_USER!,
+      pass: process.env.SMTP_PASS!,
+    },
+  })
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -33,53 +130,85 @@ export async function POST(request: NextRequest) {
     // Validate required fields
     if (!data.name || !data.email) {
       return NextResponse.json(
-        { error: 'Name and email are required' },
+        { success: false, error: 'Name and email are required' },
         { status: 400 }
       )
     }
 
-    // Log the booking submission
-    // In production, you'd send an email here
-    console.log('New booking inquiry:', {
-      type: data.type,
-      name: data.name,
-      email: data.email,
-      phone: data.phone || 'Not provided',
-      ...(data.type === 'photography' && {
-        sessionType: data.sessionType,
-        date: data.date,
-        location: data.location,
-        referral: data.referral || 'Not provided',
-        vision: data.vision,
-      }),
-      ...(data.type === 'dj' && {
-        setType: data.setType,
-        eventDate: data.eventDate,
-        eventTime: data.eventTime,
-        eventLocation: data.eventLocation,
-        venueType: data.venueType,
-        djReferral: data.djReferral || 'Not provided',
-        energy: data.energy,
-      }),
-    })
+    // Validate message/vision based on booking type
+    if (data.type === 'photography' && !data.vision) {
+      return NextResponse.json(
+        { success: false, error: 'Please describe your vision for the session' },
+        { status: 400 }
+      )
+    }
 
-    // Get recipient email from environment variable or use default
-    const recipientEmail = process.env.BOOKINGS_EMAIL || siteConfig.primaryEmail
+    if (data.type === 'dj' && !data.energy) {
+      return NextResponse.json(
+        { success: false, error: 'Please describe the energy you\'re looking for' },
+        { status: 400 }
+      )
+    }
 
-    // TODO: Send email using your preferred email service
-    // For now, we'll just log it
-    console.log(`Booking inquiry should be sent to: ${recipientEmail}`)
+    // Check email configuration
+    if (!process.env.SMTP_HOST || !process.env.SMTP_PORT || !process.env.SMTP_USER || !process.env.SMTP_PASS || !process.env.BOOKINGS_EMAIL) {
+      console.error('Email configuration is missing. Required env vars: SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, BOOKINGS_EMAIL')
+      return NextResponse.json(
+        { success: false, error: 'Email configuration is missing.' },
+        { status: 500 }
+      )
+    }
 
-    return NextResponse.json(
-      { message: 'Booking inquiry received successfully' },
-      { status: 200 }
-    )
-  } catch (error) {
+    // Create transporter
+    let transporter
+    try {
+      transporter = createTransporter()
+    } catch (error: any) {
+      console.error('Failed to create email transporter:', error.message)
+      return NextResponse.json(
+        { success: false, error: 'Email configuration is missing.' },
+        { status: 500 }
+      )
+    }
+
+    // Format email content
+    const emailText = formatBookingEmail(data)
+    
+    // Determine booking type for subject line
+    const bookingType = data.type === 'photography' 
+      ? (data.sessionType || 'Photography')
+      : (data.setType || 'DJ Set')
+    
+    const subject = `New booking inquiry from ${data.name} – ${bookingType}`
+
+    // Send email
+    try {
+      await transporter.sendMail({
+        from: process.env.SMTP_USER!,
+        to: process.env.BOOKINGS_EMAIL!,
+        subject: subject,
+        text: emailText,
+        replyTo: data.email, // Allow direct reply to the customer
+      })
+
+      console.log(`Booking inquiry email sent successfully to ${process.env.BOOKINGS_EMAIL}`)
+      
+      return NextResponse.json(
+        { success: true },
+        { status: 200 }
+      )
+    } catch (emailError: any) {
+      console.error('Failed to send email:', emailError)
+      return NextResponse.json(
+        { success: false, error: 'Failed to send email.' },
+        { status: 500 }
+      )
+    }
+  } catch (error: any) {
     console.error('Error processing booking:', error)
     return NextResponse.json(
-      { error: 'Failed to process booking inquiry' },
+      { success: false, error: 'Failed to process booking inquiry' },
       { status: 500 }
     )
   }
 }
-
