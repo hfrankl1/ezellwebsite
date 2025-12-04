@@ -1,0 +1,6 @@
+# This file ensures the public directory is tracked by git
+# Add your images here:
+# - public/photos/[collection-slug]/cover.jpg
+# - public/photos/[collection-slug]/1.jpg, 2.jpg, etc.
+# - public/prints/print-image.jpg
+
