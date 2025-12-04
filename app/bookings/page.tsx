@@ -26,13 +26,19 @@ export default function BookingsPage() {
         body: JSON.stringify(data),
       })
 
-      if (response.ok) {
+      // Parse the JSON response
+      const result = await response.json()
+      
+      // Check both response status and success flag
+      if (response.ok && result.success === true) {
         setSubmitStatus('success')
         e.currentTarget.reset()
       } else {
+        console.error('API error:', result)
         setSubmitStatus('error')
       }
     } catch (error) {
+      console.error('Network error:', error)
       setSubmitStatus('error')
     } finally {
       setIsSubmitting(false)
