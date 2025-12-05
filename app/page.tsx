@@ -5,7 +5,31 @@ import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import { siteConfig } from '@/config/site'
 import { photoCollections } from '@/data/photos'
-import { djSets } from '@/data/sounds'
+
+const comingSoonCards = [
+  {
+    id: 'club-sets',
+    title: 'Club Sets',
+    subtitle: 'High-energy blends for clubs and festivals.',
+    tags: ['House', 'Hip-hop', 'Edits'],
+    status: 'Booking available now. Mixes coming soon.',
+    available: true,
+  },
+  {
+    id: 'private-events',
+    title: 'Private Events',
+    subtitle: 'Weddings, brand events, and intimate parties with intention.',
+    status: 'Curated vibes for people who care about the music.',
+    available: true,
+  },
+  {
+    id: 'live-mix-series',
+    title: 'Live Mix Series',
+    subtitle: 'A series of recorded sets for YouTube and future platforms.',
+    status: 'Stay tuned — first drop coming soon.',
+    available: false,
+  },
+]
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -226,38 +250,46 @@ export default function HomePage() {
             className="py-20 px-4 sm:px-6 lg:px-8"
           >
             <div className="max-w-7xl mx-auto">
-              {/* DJ Sets Teaser */}
+              {/* Coming Soon Cards */}
               <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center">
                 DJ Offerings
               </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-                {djSets.map((set, index) => (
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+                {comingSoonCards.map((card, index) => (
                   <motion.div
-                    key={set.slug}
+                    key={card.id}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.1, duration: 0.5 }}
-                    whileHover={{ y: -8, scale: 1.02 }}
-                    className="bg-card border border-border rounded-lg p-6 hover:border-accent/50 transition-all shadow-lg"
+                    transition={{ 
+                      delay: index * 0.1, 
+                      duration: 0.5,
+                      ease: 'easeOut'
+                    }}
+                    whileHover={{ 
+                      y: -8,
+                      scale: 1.02,
+                    }}
+                    className="bg-card border border-border rounded-lg p-6 shadow-lg hover:border-accent/50 transition-all"
                   >
-                    <div className="flex items-center justify-between mb-3">
-                      <span className="text-accent text-sm font-medium">{set.alias}</span>
-                      {set.vibe && (
-                        <span className="text-xs text-muted-foreground">{set.vibe}</span>
-                      )}
-                    </div>
-                    <h3 className="text-xl font-semibold mb-2">{set.title}</h3>
-                    <p className="text-sm text-muted-foreground mb-4">{set.description}</p>
-                    <div className="flex flex-wrap gap-2">
-                      {set.genreTags.map((tag) => (
-                        <span
-                          key={tag}
-                          className="text-xs px-2 py-1 bg-background/50 rounded border border-border"
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
+                    <h3 className="text-2xl font-bold mb-2">{card.title}</h3>
+                    <p className="text-muted-foreground mb-4">{card.subtitle}</p>
+                    
+                    {card.tags && (
+                      <div className="flex flex-wrap gap-2 mb-4">
+                        {card.tags.map((tag) => (
+                          <span
+                            key={tag}
+                            className="text-xs px-2 py-1 bg-background/50 rounded border border-border"
+                          >
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                    
+                    <p className={`text-sm mb-4 ${card.available ? 'text-accent' : 'text-muted-foreground'}`}>
+                      {card.status}
+                    </p>
                   </motion.div>
                 ))}
               </div>
@@ -272,16 +304,16 @@ export default function HomePage() {
                     href="/sounds"
                     className="bg-accent hover:bg-wine-hover text-accent-foreground px-8 py-3 rounded-full font-medium transition-colors shadow-lg"
                   >
-                    View Sets
+                    View Sounds
                   </Link>
                   <Link
-                    href="/bookings"
+                    href="/bookings?type=dj"
                     className="bg-transparent border border-border hover:border-accent text-foreground px-8 py-3 rounded-full font-medium transition-colors"
                   >
                     Book Club Set
                   </Link>
                   <Link
-                    href="/bookings"
+                    href="/bookings?type=dj"
                     className="bg-transparent border border-border hover:border-accent text-foreground px-8 py-3 rounded-full font-medium transition-colors"
                   >
                     Book Private Event
