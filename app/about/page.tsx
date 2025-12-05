@@ -1,4 +1,5 @@
 import { Metadata } from 'next'
+import Image from 'next/image'
 import { siteConfig } from '@/config/site'
 import Link from 'next/link'
 
@@ -14,60 +15,39 @@ export default function AboutPage() {
         {/* Hero Image */}
         <div className="mb-16">
           <div className="relative aspect-[4/5] rounded-lg overflow-hidden bg-card border border-border">
-            <div className="absolute inset-0 bg-gradient-to-br from-wine/30 to-background" />
-            {/* Placeholder for portrait image */}
+            <Image
+              src="/ezell-portrait.jpg"
+              alt="Ezell Franklin - Photographer & DJ"
+              fill
+              className="object-cover"
+              priority
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 800px"
+            />
           </div>
         </div>
 
-        {/* Who I Am */}
+        {/* Main About Section */}
         <section className="mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6">Who I Am</h2>
-          <div className="prose prose-invert prose-lg max-w-none space-y-4">
+          <h1 className="text-3xl md:text-4xl font-bold mb-8">About Ezell</h1>
+          <div className="prose prose-invert prose-lg max-w-none space-y-6">
+            <p className="text-foreground/80 leading-relaxed text-lg">
+              <strong>Ezell Franklin — Photographer & DJ (Ez and Lz)</strong>
+            </p>
+            
             <p className="text-foreground/80 leading-relaxed">
-              I&apos;m Ezell Franklin—photographer, DJ, and storyteller. My work lives at the intersection of visual art and sound, where each medium informs and elevates the other.
+              Ezell is a photographer and DJ moving between coasts and cities, somewhere between the Bay and the South, always chasing good light and better sound.
             </p>
+            
             <p className="text-foreground/80 leading-relaxed">
-              As a photographer, I specialize in editorial, portraits, and event photography. My style is cinematic and intimate, drawing inspiration from high fashion and street culture. I believe every image should tell a story, capture an emotion, or reveal something true about the subject.
+              Behind the camera, his work lives in portraiture, fashion, and editorial stories. He&apos;s drawn to people with their own flavor—quiet or loud, polished or raw—and his real obsession is translating that into images that feel like they were pulled from a memory you didn&apos;t know you had. Getting the shot is the job. Making people feel seen, beautiful, and a little more themselves is the joy.
             </p>
+            
             <p className="text-foreground/80 leading-relaxed">
-              As a DJ, I perform under the aliases <strong>Ez</strong> and <strong>Lz</strong>, curating sets that blend house, hip-hop, R&B, and afrobeats. Whether it&apos;s a peak-hour club set or a late-night private event, I&apos;m focused on creating an experience—building energy, reading the room, and keeping people moving.
+              When the camera is down, he becomes Ez and Lz—a two-sided DJ persona blending rap, hip-hop, house, afrobeats, and amapiano into sets built for movement. Ez and Lz spin to watch shoulders loosen, faces light up, and rooms breathe in unison with the beat. For them, a night out is just another kind of portrait: a crowd captured in motion, held together by sound.
             </p>
-          </div>
-        </section>
-
-        {/* Photos & Sounds */}
-        <section className="mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6">Photos & Sounds</h2>
-          <div className="prose prose-invert prose-lg max-w-none space-y-4">
+            
             <p className="text-foreground/80 leading-relaxed">
-              The dual identity isn&apos;t a gimmick—it&apos;s who I am. <strong>Ezell Franklin</strong> is the photographer, the visual storyteller. <strong>Ez</strong> and <strong>Lz</strong> are the DJ personas, each with their own vibe and energy.
-            </p>
-            <p className="text-foreground/80 leading-relaxed">
-              But they&apos;re not separate. The photographer in me sees rhythm and composition in music. The DJ in me understands pacing and flow in photography. Both are about creating moments that resonate, that make people feel something.
-            </p>
-            <p className="text-foreground/80 leading-relaxed">
-              Whether you&apos;re booking a portrait session or a DJ set, you&apos;re getting the same attention to detail, the same commitment to craft, and the same passion for creating something meaningful.
-            </p>
-          </div>
-        </section>
-
-        {/* Influences */}
-        <section className="mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6">Influences</h2>
-          <div className="prose prose-invert prose-lg max-w-none">
-            <p className="text-foreground/80 leading-relaxed mb-4">
-              My work is informed by a diverse range of artists and creators who&apos;ve pushed boundaries and redefined what&apos;s possible:
-            </p>
-            <ul className="list-none space-y-2 text-foreground/80">
-              <li><strong>Virgil Abloh</strong> — For showing how design, music, and culture can intersect</li>
-              <li><strong>Kanye West</strong> — For the audacity to blend genres and mediums</li>
-              <li><strong>Kaytranada</strong> — For the smooth, genre-blending production</li>
-              <li><strong>Jazzy Jeff</strong> — For the technical mastery and showmanship</li>
-              <li><strong>Andre 3000</strong> — For the poetic lyricism and artistic evolution</li>
-              <li><strong>A$AP Rocky</strong> — For the fashion-forward aesthetic and cultural impact</li>
-            </ul>
-            <p className="text-foreground/80 leading-relaxed mt-6">
-              These influences shape how I approach both photography and DJing—always pushing boundaries, always evolving, always creating.
+              Whether it&apos;s on film or on the decks, Ezell builds worlds where people can recognize themselves, feel expensive for a moment, and get lost in the story.
             </p>
           </div>
         </section>
@@ -88,4 +68,3 @@ export default function AboutPage() {
     </div>
   )
 }
-
