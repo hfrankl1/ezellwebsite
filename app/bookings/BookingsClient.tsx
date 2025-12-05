@@ -340,7 +340,7 @@ export default function BookingsClient() {
 
                 <div>
                   <label htmlFor="djReferral" className="block text-sm font-medium mb-2">
-                    How did you hear about Ez/Lz?
+                    How did you hear about Ez and Lz?
                   </label>
                   <input
                     type="text"

@@ -66,7 +66,7 @@ export default function HomePage() {
                 transition={{ duration: 0.5 }}
                 className="text-5xl md:text-7xl font-bold mb-4"
               >
-                Ez / Lz
+                Ez and Lz
               </motion.h1>
             )}
           </AnimatePresence>

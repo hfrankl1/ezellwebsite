@@ -46,7 +46,7 @@ export default function SoundsPage() {
             transition={{ duration: 0.6, delay: 0.1 }}
             className="text-4xl md:text-6xl font-bold mb-4"
           >
-            Sounds by Ez / Lz
+            Sounds by Ez and Lz
           </motion.h1>
           <motion.p
             initial={{ opacity: 0 }}
@@ -115,13 +115,13 @@ export default function SoundsPage() {
           className="text-center border-t border-border pt-12"
         >
           <p className="text-lg text-muted-foreground mb-6">
-            Ready to book Ez / Lz for your event?
+            Ready to book Ez and Lz for your event?
           </p>
           <Link
             href="/bookings?type=dj"
             className="inline-block bg-accent hover:bg-wine-hover text-accent-foreground px-8 py-3 rounded-full font-medium transition-colors shadow-lg"
           >
-            Book Ez / Lz
+            Book Ez and Lz
           </Link>
         </motion.div>
       </div>
