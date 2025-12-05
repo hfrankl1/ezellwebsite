@@ -7,11 +7,37 @@
   --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
+
+  /* Theme Colors - Deep Espresso Black + Muted Wine Red */
+  --background: 330 15% 5%; /* Near-black, very deep espresso */
+  --foreground: 0 0% 98%; /* Soft white */
+  
+  --accent: 350 65% 35%; /* Muted wine red (rich burgundy) */
+  --accent-foreground: 0 0% 98%; /* White text on accent */
+  
+  --muted: 0 0% 60%; /* Light gray for muted text */
+  --muted-foreground: 0 0% 75%; /* Lighter gray */
+  
+  --border: 0 0% 20% / 0.3; /* Subtle gray with low opacity */
+  
+  --card: 330 15% 8%; /* Slightly lighter charcoal for cards */
+  --card-foreground: 0 0% 98%;
 }
 
 @layer base {
   body {
-    @apply bg-black text-white font-sans antialiased;
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+  
+  /* Respect reduced motion preferences */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
   }
 }
 
@@ -28,14 +54,13 @@
 }
 
 ::-webkit-scrollbar-track {
-  @apply bg-black;
+  @apply bg-background;
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-wine/50 rounded-full;
+  @apply bg-accent/50 rounded-full;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  @apply bg-wine;
+  @apply bg-accent;
 }
-

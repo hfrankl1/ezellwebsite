@@ -11,10 +11,10 @@ export default function Navigation() {
 
   return (
     <>
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-sm border-b border-white/10">
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-sm border-b border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            <Link href="/" className="text-xl font-bold tracking-tight">
+            <Link href="/" className="text-xl font-bold tracking-tight text-foreground hover:text-accent transition-colors">
               {siteConfig.siteName}
             </Link>
 
@@ -24,7 +24,7 @@ export default function Navigation() {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className="text-sm hover:text-wine transition-colors"
+                  className="text-sm text-muted-foreground hover:text-accent transition-colors"
                 >
                   {item.label}
                 </Link>
@@ -34,7 +34,7 @@ export default function Navigation() {
             {/* Mobile Menu Button */}
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="md:hidden p-2"
+              className="md:hidden p-2 text-foreground"
               aria-label="Toggle menu"
             >
               {isOpen ? <X size={24} /> : <Menu size={24} />}
@@ -50,7 +50,7 @@ export default function Navigation() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-40 bg-black md:hidden"
+            className="fixed inset-0 z-40 bg-background md:hidden"
             onClick={() => setIsOpen(false)}
           >
             <motion.div
@@ -58,7 +58,7 @@ export default function Navigation() {
               animate={{ x: 0 }}
               exit={{ x: '-100%' }}
               transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="h-full w-64 bg-black border-r border-white/10 p-8"
+              className="h-full w-64 bg-background border-r border-border p-8"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="flex flex-col space-y-6 mt-16">
@@ -67,7 +67,7 @@ export default function Navigation() {
                     key={item.href}
                     href={item.href}
                     onClick={() => setIsOpen(false)}
-                    className="text-xl hover:text-wine transition-colors"
+                    className="text-xl text-muted-foreground hover:text-accent transition-colors"
                   >
                     {item.label}
                   </Link>
@@ -80,4 +80,3 @@ export default function Navigation() {
     </>
   )
 }
-

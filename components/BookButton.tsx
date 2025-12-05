@@ -13,11 +13,10 @@ export default function BookButton() {
     >
       <Link
         href="/bookings"
-        className="bg-wine hover:bg-wine-light text-white px-6 py-3 rounded-full text-sm font-medium shadow-lg transition-colors flex items-center gap-2"
+        className="bg-accent hover:bg-wine-hover text-accent-foreground px-6 py-3 rounded-full text-sm font-medium shadow-lg transition-colors flex items-center gap-2"
       >
         <span>Book Ezell</span>
       </Link>
     </motion.div>
   )
 }
-

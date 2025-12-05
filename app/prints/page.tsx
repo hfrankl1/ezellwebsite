@@ -42,10 +42,10 @@ export default function PrintsPage() {
           className="text-center mb-16"
         >
           <h1 className="text-4xl md:text-6xl font-bold mb-4">Prints</h1>
-          <p className="text-lg text-white/70 max-w-2xl mx-auto mb-4">
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-4">
             Creative photography prints available for purchase.
           </p>
-          <p className="text-sm text-white/50">
+          <p className="text-sm text-muted-foreground/70">
             Each piece is made to order. Inquire for availability and pricing.
           </p>
         </motion.div>
@@ -62,20 +62,20 @@ export default function PrintsPage() {
               <motion.div
                 whileHover={{ y: -8 }}
                 transition={{ type: 'spring', stiffness: 300 }}
-                className="relative aspect-[4/3] overflow-hidden rounded-lg bg-white/5 mb-4"
+                  className="relative aspect-[4/3] overflow-hidden rounded-lg bg-card border border-border mb-4"
               >
                 <div className="absolute inset-0 bg-gradient-to-br from-wine/30 to-black" />
                 <div className="absolute bottom-0 left-0 right-0 p-6 z-10 opacity-0 group-hover:opacity-100 transition-opacity">
                   <button
                     onClick={() => handleInquire(print.id)}
-                    className="w-full bg-wine hover:bg-wine-light text-white px-4 py-2 rounded-full text-sm font-medium transition-colors"
+                    className="w-full bg-accent hover:bg-wine-hover text-accent-foreground px-4 py-2 rounded-full text-sm font-medium transition-colors"
                   >
                     Inquire to Purchase
                   </button>
                 </div>
               </motion.div>
               <h3 className="text-xl font-semibold mb-2">{print.title}</h3>
-              <p className="text-sm text-white/70 mb-3">{print.description}</p>
+              <p className="text-sm text-muted-foreground mb-3">{print.description}</p>
               <div className="flex flex-wrap gap-2 mb-4">
                 {print.sizes.map((size) => (
                   <span
@@ -88,7 +88,7 @@ export default function PrintsPage() {
               </div>
               <button
                 onClick={() => handleInquire(print.id)}
-                className="text-sm text-wine hover:text-wine-light transition-colors"
+                className="text-sm text-accent hover:text-wine-hover transition-colors"
               >
                 Inquire to Purchase →
               </button>
@@ -111,7 +111,7 @@ export default function PrintsPage() {
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.9, opacity: 0 }}
                 onClick={(e) => e.stopPropagation()}
-                className="bg-black border border-white/20 rounded-lg p-8 max-w-md w-full"
+                className="bg-card border border-border rounded-lg p-8 max-w-md w-full"
               >
                 <div className="flex justify-between items-center mb-6">
                   <h2 className="text-2xl font-bold">Print Inquiry</h2>
@@ -133,7 +133,7 @@ export default function PrintsPage() {
                       id="name"
                       name="name"
                       required
-                      className="w-full bg-white/5 border border-white/20 rounded px-4 py-2 focus:outline-none focus:border-wine"
+                      className="w-full bg-card border border-border rounded px-4 py-2 focus:outline-none focus:border-accent text-foreground"
                     />
                   </div>
                   <div>
@@ -145,7 +145,7 @@ export default function PrintsPage() {
                       id="email"
                       name="email"
                       required
-                      className="w-full bg-white/5 border border-white/20 rounded px-4 py-2 focus:outline-none focus:border-wine"
+                      className="w-full bg-card border border-border rounded px-4 py-2 focus:outline-none focus:border-accent text-foreground"
                     />
                   </div>
                   <div>
@@ -156,13 +156,13 @@ export default function PrintsPage() {
                       id="message"
                       name="message"
                       rows={4}
-                      className="w-full bg-white/5 border border-white/20 rounded px-4 py-2 focus:outline-none focus:border-wine"
+                      className="w-full bg-card border border-border rounded px-4 py-2 focus:outline-none focus:border-accent text-foreground"
                       placeholder="Tell us about your interest in this print..."
                     />
                   </div>
                   <button
                     type="submit"
-                    className="w-full bg-wine hover:bg-wine-light text-white px-6 py-3 rounded-full font-medium transition-colors"
+                    className="w-full bg-accent hover:bg-wine-hover text-accent-foreground px-6 py-3 rounded-full font-medium transition-colors"
                   >
                     Send Inquiry
                   </button>

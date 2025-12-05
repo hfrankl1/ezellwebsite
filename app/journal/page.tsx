@@ -37,7 +37,7 @@ export default function JournalPage() {
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-16">
           <h1 className="text-4xl md:text-6xl font-bold mb-4">Journal</h1>
-          <p className="text-lg text-white/70">
+          <p className="text-lg text-muted-foreground">
             Behind-the-scenes stories, moodboards, and thoughts on art, culture, and music.
           </p>
         </div>
@@ -46,8 +46,8 @@ export default function JournalPage() {
           {journalPosts.map((post) => (
             <article key={post.slug}>
               <Link href={`/journal/${post.slug}`} className="group block">
-                <div className="bg-white/5 rounded-lg p-8 border border-white/10 hover:border-wine/50 transition-colors">
-                  <div className="flex items-center gap-4 mb-3 text-sm text-white/50">
+                <div className="bg-card rounded-lg p-8 border border-border hover:border-accent/50 transition-colors shadow-lg">
+                  <div className="flex items-center gap-4 mb-3 text-sm text-muted-foreground">
                     <time dateTime={post.date}>
                       {new Date(post.date).toLocaleDateString('en-US', {
                         year: 'numeric',
@@ -56,15 +56,15 @@ export default function JournalPage() {
                       })}
                     </time>
                   </div>
-                  <h2 className="text-2xl font-bold mb-3 group-hover:text-wine transition-colors">
+                  <h2 className="text-2xl font-bold mb-3 group-hover:text-accent transition-colors">
                     {post.title}
                   </h2>
-                  <p className="text-white/70 mb-4">{post.excerpt}</p>
+                  <p className="text-muted-foreground mb-4">{post.excerpt}</p>
                   <div className="flex flex-wrap gap-2">
                     {post.tags.map((tag) => (
                       <span
                         key={tag}
-                        className="text-xs px-2 py-1 bg-white/10 rounded"
+                        className="text-xs px-2 py-1 bg-background/50 rounded border border-border"
                       >
                         {tag}
                       </span>

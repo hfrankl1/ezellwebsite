@@ -7,26 +7,51 @@ import { siteConfig } from '@/config/site'
 import { photoCollections } from '@/data/photos'
 import { djSets } from '@/data/sounds'
 
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+      delayChildren: 0.2,
+    },
+  },
+}
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.6,
+      ease: 'easeOut',
+    },
+  },
+}
+
 export default function HomePage() {
   const [mode, setMode] = useState<'photos' | 'sounds'>('photos')
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-background">
       {/* Hero Section */}
       <section className="h-screen flex flex-col items-center justify-center relative overflow-hidden">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
           className="text-center z-10 px-4"
         >
           <AnimatePresence mode="wait">
             {mode === 'photos' ? (
               <motion.h1
                 key="photos-title"
+                variants={itemVariants}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.5 }}
                 className="text-5xl md:text-7xl font-bold mb-4"
               >
                 {siteConfig.siteName}
@@ -34,9 +59,11 @@ export default function HomePage() {
             ) : (
               <motion.h1
                 key="sounds-title"
+                variants={itemVariants}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.5 }}
                 className="text-5xl md:text-7xl font-bold mb-4"
               >
                 Ez / Lz
@@ -45,49 +72,67 @@ export default function HomePage() {
           </AnimatePresence>
 
           <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.3 }}
-            className="text-lg md:text-xl text-white/70 mb-8"
+            variants={itemVariants}
+            className="text-lg md:text-xl text-muted-foreground mb-8"
           >
             {siteConfig.taglineExtended}
           </motion.p>
 
           {/* Toggle Switch */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.5 }}
+            variants={itemVariants}
             className="flex items-center justify-center gap-4 mb-12"
           >
-            <button
+            <motion.button
               onClick={() => setMode('photos')}
-              className={`px-6 py-3 text-sm font-medium transition-all ${
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className={`relative px-6 py-3 text-sm font-medium transition-all ${
                 mode === 'photos'
-                  ? 'text-white border-b-2 border-wine'
-                  : 'text-white/50 hover:text-white/70'
+                  ? 'text-foreground'
+                  : 'text-muted-foreground hover:text-foreground/70'
               }`}
             >
               PHOTOS
-            </button>
-            <div className="w-px h-6 bg-white/20" />
-            <button
+              {mode === 'photos' && (
+                <motion.div
+                  layoutId="activeTab"
+                  className="absolute bottom-0 left-0 right-0 h-0.5 bg-accent"
+                  initial={false}
+                  transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+                />
+              )}
+            </motion.button>
+            <div className="w-px h-6 bg-border" />
+            <motion.button
               onClick={() => setMode('sounds')}
-              className={`px-6 py-3 text-sm font-medium transition-all ${
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className={`relative px-6 py-3 text-sm font-medium transition-all ${
                 mode === 'sounds'
-                  ? 'text-white border-b-2 border-wine'
-                  : 'text-white/50 hover:text-white/70'
+                  ? 'text-foreground'
+                  : 'text-muted-foreground hover:text-foreground/70'
               }`}
             >
               SOUNDS
-            </button>
+              {mode === 'sounds' && (
+                <motion.div
+                  layoutId="activeTab"
+                  className="absolute bottom-0 left-0 right-0 h-0.5 bg-accent"
+                  initial={false}
+                  transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+                />
+              )}
+            </motion.button>
           </motion.div>
         </motion.div>
 
         {/* Background Accent */}
         <motion.div
           animate={{
-            backgroundColor: mode === 'photos' ? 'rgba(139, 38, 53, 0.1)' : 'rgba(139, 38, 53, 0.15)',
+            backgroundColor: mode === 'photos' 
+              ? 'hsl(350, 65%, 35%, 0.1)' 
+              : 'hsl(350, 65%, 35%, 0.15)',
           }}
           transition={{ duration: 0.5 }}
           className="absolute inset-0 -z-10"
@@ -99,10 +144,10 @@ export default function HomePage() {
         {mode === 'photos' ? (
           <motion.section
             key="photos-content"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.4 }}
             className="py-20 px-4 sm:px-6 lg:px-8"
           >
             <div className="max-w-7xl mx-auto">
@@ -111,50 +156,59 @@ export default function HomePage() {
                 Selected Collections
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-                {photoCollections.slice(0, 6).map((collection) => (
-                  <Link
+                {photoCollections.slice(0, 6).map((collection, index) => (
+                  <motion.div
                     key={collection.slug}
-                    href={`/photos/${collection.slug}`}
-                    className="group"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.1, duration: 0.5 }}
+                    viewport={{ once: true }}
                   >
-                    <motion.div
-                      whileHover={{ y: -8 }}
-                      transition={{ type: 'spring', stiffness: 300 }}
-                      className="relative aspect-[4/3] overflow-hidden rounded-lg bg-white/5"
+                    <Link
+                      href={`/photos/${collection.slug}`}
+                      className="group block"
                     >
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-10" />
-                      <div className="absolute bottom-0 left-0 right-0 p-6 z-20">
-                        <h3 className="text-xl font-semibold mb-1">{collection.title}</h3>
-                        <p className="text-sm text-white/70">{collection.category}</p>
-                      </div>
-                      {/* Placeholder for image */}
-                      <div className="w-full h-full bg-gradient-to-br from-wine/20 to-black" />
-                    </motion.div>
-                  </Link>
+                      <motion.div
+                        whileHover={{ y: -8, scale: 1.02 }}
+                        transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+                        className="relative aspect-[4/3] overflow-hidden rounded-lg bg-card border border-border shadow-lg"
+                      >
+                        <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-background/20 to-transparent z-10" />
+                        <div className="absolute bottom-0 left-0 right-0 p-6 z-20">
+                          <h3 className="text-xl font-semibold mb-1 group-hover:text-accent transition-colors">
+                            {collection.title}
+                          </h3>
+                          <p className="text-sm text-muted-foreground">{collection.category}</p>
+                        </div>
+                        {/* Placeholder for image */}
+                        <div className="w-full h-full bg-gradient-to-br from-wine/20 to-background" />
+                      </motion.div>
+                    </Link>
+                  </motion.div>
                 ))}
               </div>
 
               {/* CTAs */}
               <div className="text-center space-y-4">
-                <p className="text-lg text-white/70 mb-8">
+                <p className="text-lg text-muted-foreground mb-8">
                   Portrait sessions and fine art prints available.
                 </p>
                 <div className="flex flex-wrap justify-center gap-4">
                   <Link
                     href="/photos"
-                    className="bg-wine hover:bg-wine-light text-white px-8 py-3 rounded-full font-medium transition-colors"
+                    className="bg-accent hover:bg-wine-hover text-accent-foreground px-8 py-3 rounded-full font-medium transition-colors shadow-lg"
                   >
                     View Photos
                   </Link>
                   <Link
                     href="/prints"
-                    className="bg-transparent border border-white/20 hover:border-wine text-white px-8 py-3 rounded-full font-medium transition-colors"
+                    className="bg-transparent border border-border hover:border-accent text-foreground px-8 py-3 rounded-full font-medium transition-colors"
                   >
                     Shop Prints
                   </Link>
                   <Link
                     href="/bookings"
-                    className="bg-transparent border border-white/20 hover:border-wine text-white px-8 py-3 rounded-full font-medium transition-colors"
+                    className="bg-transparent border border-border hover:border-accent text-foreground px-8 py-3 rounded-full font-medium transition-colors"
                   >
                     Book Portrait Session
                   </Link>
@@ -165,10 +219,10 @@ export default function HomePage() {
         ) : (
           <motion.section
             key="sounds-content"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.4 }}
             className="py-20 px-4 sm:px-6 lg:px-8"
           >
             <div className="max-w-7xl mx-auto">
@@ -177,26 +231,28 @@ export default function HomePage() {
                 DJ Offerings
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-                {djSets.map((set) => (
+                {djSets.map((set, index) => (
                   <motion.div
                     key={set.slug}
-                    whileHover={{ y: -8 }}
-                    transition={{ type: 'spring', stiffness: 300 }}
-                    className="bg-white/5 rounded-lg p-6 border border-white/10 hover:border-wine/50 transition-colors"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.1, duration: 0.5 }}
+                    whileHover={{ y: -8, scale: 1.02 }}
+                    className="bg-card border border-border rounded-lg p-6 hover:border-accent/50 transition-all shadow-lg"
                   >
                     <div className="flex items-center justify-between mb-3">
-                      <span className="text-wine text-sm font-medium">{set.alias}</span>
+                      <span className="text-accent text-sm font-medium">{set.alias}</span>
                       {set.vibe && (
-                        <span className="text-xs text-white/50">{set.vibe}</span>
+                        <span className="text-xs text-muted-foreground">{set.vibe}</span>
                       )}
                     </div>
                     <h3 className="text-xl font-semibold mb-2">{set.title}</h3>
-                    <p className="text-sm text-white/70 mb-4">{set.description}</p>
+                    <p className="text-sm text-muted-foreground mb-4">{set.description}</p>
                     <div className="flex flex-wrap gap-2">
                       {set.genreTags.map((tag) => (
                         <span
                           key={tag}
-                          className="text-xs px-2 py-1 bg-white/10 rounded"
+                          className="text-xs px-2 py-1 bg-background/50 rounded border border-border"
                         >
                           {tag}
                         </span>
@@ -208,25 +264,25 @@ export default function HomePage() {
 
               {/* CTAs */}
               <div className="text-center space-y-4">
-                <p className="text-lg text-white/70 mb-8">
+                <p className="text-lg text-muted-foreground mb-8">
                   Available for club sets and private events.
                 </p>
                 <div className="flex flex-wrap justify-center gap-4">
                   <Link
                     href="/sounds"
-                    className="bg-wine hover:bg-wine-light text-white px-8 py-3 rounded-full font-medium transition-colors"
+                    className="bg-accent hover:bg-wine-hover text-accent-foreground px-8 py-3 rounded-full font-medium transition-colors shadow-lg"
                   >
                     View Sets
                   </Link>
                   <Link
                     href="/bookings"
-                    className="bg-transparent border border-white/20 hover:border-wine text-white px-8 py-3 rounded-full font-medium transition-colors"
+                    className="bg-transparent border border-border hover:border-accent text-foreground px-8 py-3 rounded-full font-medium transition-colors"
                   >
                     Book Club Set
                   </Link>
                   <Link
                     href="/bookings"
-                    className="bg-transparent border border-white/20 hover:border-wine text-white px-8 py-3 rounded-full font-medium transition-colors"
+                    className="bg-transparent border border-border hover:border-accent text-foreground px-8 py-3 rounded-full font-medium transition-colors"
                   >
                     Book Private Event
                   </Link>
@@ -239,4 +295,3 @@ export default function HomePage() {
     </div>
   )
 }
-

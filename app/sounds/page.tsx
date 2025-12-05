@@ -1,155 +1,130 @@
 'use client'
 
-import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { djSets } from '@/data/sounds'
+import Link from 'next/link'
 import { siteConfig } from '@/config/site'
 
+const comingSoonCards = [
+  {
+    id: 'club-sets',
+    title: 'Club Sets',
+    subtitle: 'High-energy blends for clubs and festivals.',
+    tags: ['House', 'Hip-hop', 'Edits'],
+    status: 'Booking available now. Mixes coming soon.',
+    available: true,
+  },
+  {
+    id: 'private-events',
+    title: 'Private Events',
+    subtitle: 'Weddings, brand events, and intimate parties with intention.',
+    status: 'Curated vibes for people who care about the music.',
+    available: true,
+  },
+  {
+    id: 'live-mix-series',
+    title: 'Live Mix Series',
+    subtitle: 'A series of recorded sets for YouTube and future platforms.',
+    status: 'Stay tuned — first drop coming soon.',
+    available: false,
+  },
+]
+
 export default function SoundsPage() {
-  const [selectedAlias, setSelectedAlias] = useState<string | null>(null)
-  const [selectedGenre, setSelectedGenre] = useState<string | null>(null)
-
-  const allGenres = Array.from(new Set(djSets.flatMap((set) => set.genreTags)))
-  const filteredSets = djSets.filter((set) => {
-    if (selectedAlias && set.alias !== selectedAlias) return false
-    if (selectedGenre && !set.genreTags.includes(selectedGenre)) return false
-    return true
-  })
-
   return (
     <div className="pt-24 pb-20 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
+        {/* Hero */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <h1 className="text-4xl md:text-6xl font-bold mb-4">Sounds</h1>
-          <p className="text-lg text-white/70 max-w-2xl mx-auto">
-            DJ sets and mixes by {siteConfig.djAliases.ez} and {siteConfig.djAliases.lz}.
-          </p>
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="text-4xl md:text-6xl font-bold mb-4"
+          >
+            Sounds by Ez / Lz
+          </motion.h1>
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="text-lg text-muted-foreground max-w-2xl mx-auto mb-2"
+          >
+            Club nights, rooftop sets, and blends that feel like late-night conversations.
+          </motion.p>
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            className="text-sm text-muted-foreground/70"
+          >
+            Live sets and mixes are coming soon.
+          </motion.p>
         </motion.div>
 
-        {/* Filters */}
-        <div className="mb-12 space-y-6">
-          {/* Alias Filter */}
-          <div>
-            <h3 className="text-sm text-white/50 mb-3">Filter by Alias</h3>
-            <div className="flex flex-wrap gap-3">
-              <button
-                onClick={() => setSelectedAlias(null)}
-                className={`px-4 py-2 rounded-full text-sm transition-colors ${
-                  selectedAlias === null
-                    ? 'bg-wine text-white'
-                    : 'bg-white/10 text-white/70 hover:bg-white/20'
-                }`}
-              >
-                All
-              </button>
-              {Object.values(siteConfig.djAliases).map((alias) => (
-                <button
-                  key={alias}
-                  onClick={() => setSelectedAlias(alias)}
-                  className={`px-4 py-2 rounded-full text-sm transition-colors ${
-                    selectedAlias === alias
-                      ? 'bg-wine text-white'
-                      : 'bg-white/10 text-white/70 hover:bg-white/20'
-                  }`}
-                >
-                  {alias}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Genre Filter */}
-          <div>
-            <h3 className="text-sm text-white/50 mb-3">Filter by Genre</h3>
-            <div className="flex flex-wrap gap-3">
-              <button
-                onClick={() => setSelectedGenre(null)}
-                className={`px-4 py-2 rounded-full text-sm transition-colors ${
-                  selectedGenre === null
-                    ? 'bg-wine text-white'
-                    : 'bg-white/10 text-white/70 hover:bg-white/20'
-                }`}
-              >
-                All
-              </button>
-              {allGenres.map((genre) => (
-                <button
-                  key={genre}
-                  onClick={() => setSelectedGenre(genre)}
-                  className={`px-4 py-2 rounded-full text-sm transition-colors ${
-                    selectedGenre === genre
-                      ? 'bg-wine text-white'
-                      : 'bg-white/10 text-white/70 hover:bg-white/20'
-                  }`}
-                >
-                  {genre}
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Sets Grid */}
-        {filteredSets.length === 0 ? (
-          <div className="text-center py-20">
-            <p className="text-white/50">No sets found matching your filters.</p>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredSets.map((set, index) => (
-              <motion.div
-                key={set.slug}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1, duration: 0.5 }}
-                whileHover={{ y: -8 }}
-                className="bg-white/5 rounded-lg p-6 border border-white/10 hover:border-wine/50 transition-colors"
-              >
-                <div className="flex items-center justify-between mb-3">
-                  <span className="text-wine text-sm font-medium">{set.alias}</span>
-                  {set.vibe && (
-                    <span className="text-xs text-white/50">{set.vibe}</span>
-                  )}
-                </div>
-                <h3 className="text-xl font-semibold mb-2">{set.title}</h3>
-                <p className="text-sm text-white/70 mb-4">{set.description}</p>
+        {/* Coming Soon Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+          {comingSoonCards.map((card, index) => (
+            <motion.div
+              key={card.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ 
+                delay: 0.4 + index * 0.1, 
+                duration: 0.5,
+                ease: 'easeOut'
+              }}
+              whileHover={{ 
+                y: -8,
+                scale: 1.02,
+              }}
+              className="bg-card border border-border rounded-lg p-6 shadow-lg hover:border-accent/50 transition-all"
+            >
+              <h3 className="text-2xl font-bold mb-2">{card.title}</h3>
+              <p className="text-muted-foreground mb-4">{card.subtitle}</p>
+              
+              {card.tags && (
                 <div className="flex flex-wrap gap-2 mb-4">
-                  {set.genreTags.map((tag) => (
+                  {card.tags.map((tag) => (
                     <span
                       key={tag}
-                      className="text-xs px-2 py-1 bg-white/10 rounded"
+                      className="text-xs px-2 py-1 bg-background/50 rounded border border-border"
                     >
                       {tag}
                     </span>
                   ))}
                 </div>
-                {set.embedUrl ? (
-                  <div className="mt-4">
-                    {/* Embed would go here */}
-                    <div className="aspect-video bg-white/5 rounded">
-                      <iframe
-                        src={set.embedUrl}
-                        className="w-full h-full rounded"
-                        allow="autoplay"
-                      />
-                    </div>
-                  </div>
-                ) : (
-                  <div className="mt-4 text-center py-8 bg-white/5 rounded">
-                    <p className="text-sm text-white/50">Coming Soon</p>
-                  </div>
-                )}
-              </motion.div>
-            ))}
-          </div>
-        )}
+              )}
+              
+              <p className={`text-sm mb-4 ${card.available ? 'text-accent' : 'text-muted-foreground'}`}>
+                {card.status}
+              </p>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* CTA Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.7, duration: 0.6 }}
+          className="text-center border-t border-border pt-12"
+        >
+          <p className="text-lg text-muted-foreground mb-6">
+            Ready to book Ez / Lz for your event?
+          </p>
+          <Link
+            href="/bookings?type=dj"
+            className="inline-block bg-accent hover:bg-wine-hover text-accent-foreground px-8 py-3 rounded-full font-medium transition-colors shadow-lg"
+          >
+            Book Ez / Lz
+          </Link>
+        </motion.div>
       </div>
     </div>
   )
 }
-
