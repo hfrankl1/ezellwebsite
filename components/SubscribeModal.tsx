@@ -142,7 +142,7 @@ export default function SubscribeModal() {
                     animate={{ opacity: 1, y: 0 }}
                     className="text-center py-4"
                   >
-                    <p className="text-accent font-medium">You're on the list</p>
+                    <p className="text-accent font-medium">You&apos;re on the list</p>
                   </motion.div>
                 ) : (
                   <form onSubmit={handleSubmit} className="space-y-4 relative">
