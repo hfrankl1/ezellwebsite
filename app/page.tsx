@@ -1,72 +1,11 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import Image from 'next/image'
 import { photoCollections } from '@/data/photos'
-
-const featuredPhotos = [
-  {
-    id: 1,
-    image: '/images/lillian-7.jpg',
-    headline: 'Romantic Minimalism, Reimagined.',
-    description: 'Soft power, sculpted light, and intentional florals in conversation.',
-    alt: 'Portrait of a woman reclining among gold and floral arrangements.',
-    link: '/photos',
-  },
-  {
-    id: 2,
-    image: '/images/amari_dark.jpg',
-    headline: 'Color Stories With Emotional Weight.',
-    description: 'Beauty portraiture where contrast, texture, and expression do the talking.',
-    alt: 'Close beauty portrait with bold red makeup and hands resting on a shoulder.',
-    link: '/photos',
-  },
-  {
-    id: 3,
-    image: '/images/Elexus_Finalv2.jpg',
-    headline: 'Simplicity as a Statement.',
-    description: 'Clean lines, precise light, and a profile that feels both calm and electric.',
-    alt: 'Profile portrait of a woman with teal makeup on a teal background.',
-    link: '/photos',
-  },
-  {
-    id: 4,
-    image: '/images/Faben4.jpg',
-    headline: 'Where Imagery Becomes Myth.',
-    description: 'Conceptual portraiture shaped through color, pattern, and ritual detail.',
-    alt: 'Woman lying in a circular floral composition surrounded by leaves and flowers.',
-    link: '/photos',
-  },
-]
-
-const featuredSounds = [
-  {
-    id: 1,
-    headline: 'Club Sets That Move.',
-    description: 'High-energy blends built for movement—house, hip-hop, edits, and whatever the night calls for.',
-    link: '/sounds',
-  },
-  {
-    id: 2,
-    headline: 'Private Events With Intention.',
-    description: 'Curated sound for spaces that want more than background noise. Weddings, brand events, intimate parties.',
-    link: '/sounds',
-  },
-  {
-    id: 3,
-    headline: 'Amapiano, House, R&B.',
-    description: 'Sets that move through genres with intention. Built for shoulders to loosen and rooms to breathe in unison.',
-    link: '/sounds',
-  },
-  {
-    id: 4,
-    headline: 'Sonic Experiences.',
-    description: 'Listening sessions and creative experiences shaped by mood, energy, and the feeling in the room.',
-    link: '/sounds',
-  },
-]
+import { djSets } from '@/data/sounds'
 
 const comingSoonCards = [
   {
@@ -237,7 +176,7 @@ export default function HomePage() {
                   </p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
                   {featuredPhotos.map((work, index) => (
                     <motion.div
                       key={work.id}
@@ -354,7 +293,7 @@ export default function HomePage() {
                   </p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
                   {featuredSounds.map((work, index) => (
                     <motion.div
                       key={work.id}
@@ -381,9 +320,21 @@ export default function HomePage() {
                           <h3 className="text-xl font-semibold mb-2 group-hover:text-accent transition-colors">
                             {work.headline}
                           </h3>
-                          <p className="text-sm text-muted-foreground leading-relaxed">
+                          <p className="text-sm text-muted-foreground leading-relaxed mb-2">
                             {work.description}
                           </p>
+                          {work.genreTags && work.genreTags.length > 0 && (
+                            <div className="flex flex-wrap gap-1 mt-2">
+                              {work.genreTags.slice(0, 2).map((tag) => (
+                                <span
+                                  key={tag}
+                                  className="text-xs px-2 py-1 bg-background/50 rounded border border-border text-muted-foreground"
+                                >
+                                  {tag}
+                                </span>
+                              ))}
+                            </div>
+                          )}
                         </div>
                       </Link>
                     </motion.div>

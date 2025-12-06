@@ -13,10 +13,10 @@ export const siteConfig = {
   navigation: [
     { label: 'Home', href: '/' },
     { label: 'Photos', href: '/photos' },
-    { label: 'Prints', href: '/prints' },
     { label: 'Sounds', href: '/sounds' },
     { label: 'Journal', href: '/journal' },
     { label: 'About', href: '/about' },
+    { label: 'Prints', href: '/prints' },
   ],
 
   socialLinks: {
