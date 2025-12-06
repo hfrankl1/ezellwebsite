@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
+import Link from 'next/link'
 import { PhotoCollection } from '@/data/photos'
 import CameraFlash from '@/components/CameraFlash'
 
@@ -46,6 +47,24 @@ export default function PhotoCollectionClient({ collection }: PhotoCollectionCli
             </div>
           )}
 
+          {/* CTA Block */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            className="mt-8 p-6 bg-card border border-border rounded-lg"
+          >
+            <p className="text-base text-muted-foreground mb-4">
+              Connected to this series? Book a session inspired by this style or inquire about prints.
+            </p>
+            <Link
+              href="/bookings"
+              className="inline-block bg-accent hover:bg-wine-hover text-accent-foreground px-6 py-2 rounded-full text-sm font-medium transition-colors"
+            >
+              Book a Session Like This
+            </Link>
+          </motion.div>
+
           {(collection.date || collection.location) && (
             <div className="mt-6 flex gap-6 text-sm text-muted-foreground">
               {collection.date && <span>Date: {collection.date}</span>}
@@ -72,7 +91,11 @@ export default function PhotoCollectionClient({ collection }: PhotoCollectionCli
             >
               <div className="absolute inset-0 bg-gradient-to-br from-wine/20 to-background opacity-0 group-hover:opacity-100 transition-opacity" />
               {/* Placeholder - replace with actual Image component when images are available */}
-              <div className="w-full h-full bg-gradient-to-br from-wine/30 to-background" />
+              <div 
+                className="w-full h-full bg-gradient-to-br from-wine/30 to-background"
+                aria-label={`${collection.title} - Image ${index + 1}`}
+                role="img"
+              />
             </motion.div>
           ))}
         </motion.div>

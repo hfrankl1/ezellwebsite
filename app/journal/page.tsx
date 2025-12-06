@@ -2,8 +2,8 @@ import { Metadata } from 'next'
 import Link from 'next/link'
 
 export const metadata: Metadata = {
-  title: 'Journal',
-  description: 'Behind-the-scenes stories, moodboards, and thoughts on art, culture, and music.',
+  title: 'Journal – Behind the Scenes Stories | Ezell Franklin',
+  description: 'Behind-the-scenes stories, moodboards, and thoughts on art, culture, and music from photographer and DJ Ezell Franklin.',
 }
 
 // For now, we'll use a simple array. In production, you'd read from MDX files

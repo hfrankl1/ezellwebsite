@@ -4,8 +4,8 @@ import { siteConfig } from '@/config/site'
 import Link from 'next/link'
 
 export const metadata: Metadata = {
-  title: 'About',
-  description: 'Learn about Ezell Franklin, photographer and DJ.',
+  title: 'About Ezell Franklin – Photographer & DJ | Ezell Franklin',
+  description: 'Ezell Franklin is a photographer and DJ (Ez and Lz) creating editorial photography, portraits, and DJ sets. Learn about his work in photography and music.',
 }
 
 export default function AboutPage() {

@@ -15,7 +15,7 @@ export default function BookButton() {
         href="/bookings"
         className="bg-accent hover:bg-wine-hover text-accent-foreground px-6 py-3 rounded-full text-sm font-medium shadow-lg transition-colors flex items-center gap-2"
       >
-        <span>Book Ezell</span>
+        <span>Book Ez & Lz</span>
       </Link>
     </motion.div>
   )

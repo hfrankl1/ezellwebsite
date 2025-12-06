@@ -25,8 +25,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 
   return {
-    title: collection.title,
+    title: `${collection.title} – ${collection.category} Photography | Ezell Franklin`,
     description: collection.description,
+    openGraph: {
+      title: `${collection.title} – ${collection.category} Photography`,
+      description: collection.description,
+      type: 'website',
+    },
   }
 }
 
@@ -37,5 +42,28 @@ export default function PhotoCollectionPage({ params }: PageProps) {
     notFound()
   }
 
-  return <PhotoCollectionClient collection={collection} />
+  // Structured data for photo collection
+  const collectionSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'ImageGallery',
+    name: collection.title,
+    description: collection.description,
+    image: collection.images.map((img) => `https://ezellfranklin.com${img}`),
+    creator: {
+      '@type': 'Person',
+      name: 'Ezell Franklin',
+    },
+    datePublished: collection.date || new Date().toISOString(),
+    ...(collection.location && { locationCreated: collection.location }),
+  }
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionSchema) }}
+      />
+      <PhotoCollectionClient collection={collection} />
+    </>
+  )
 }

@@ -5,6 +5,7 @@ import { siteConfig } from '@/config/site'
 import Navigation from '@/components/Navigation'
 import Footer from '@/components/Footer'
 import BookButton from '@/components/BookButton'
+import SubscribeModal from '@/components/SubscribeModal'
 
 const inter = Inter({ 
   subsets: ['latin'],
@@ -13,14 +14,24 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: {
-    default: `${siteConfig.siteName} | ${siteConfig.tagline}`,
-    template: `%s | ${siteConfig.siteName}`,
+    default: 'Ezell Franklin | Photography, Sound, and Creative Direction',
+    template: `%s | Ezell Franklin`,
   },
-  description: siteConfig.taglineExtended,
+  description: 'Editorial photography, portraits, nightlife coverage, DJ sets, fine art prints, and behind-the-scenes creative work—brought together through a cinematic, late-night storytelling voice.',
   openGraph: {
-    title: `${siteConfig.siteName} | ${siteConfig.tagline}`,
-    description: siteConfig.taglineExtended,
+    title: 'Ezell Franklin | Photography, Sound, and Creative Direction',
+    description: 'Editorial photography, portraits, nightlife coverage, DJ sets, fine art prints, and behind-the-scenes creative work—brought together through a cinematic, late-night storytelling voice.',
     type: 'website',
+    url: 'https://ezellfranklin.com',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Ezell Franklin | Photography, Sound, and Creative Direction',
+    description: 'Editorial photography, portraits, nightlife coverage, DJ sets, fine art prints, and behind-the-scenes creative work.',
+  },
+  robots: {
+    index: true,
+    follow: true,
   },
 }
 
@@ -29,8 +40,22 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
+  const personSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    name: 'Ezell Franklin',
+    jobTitle: 'Photographer, DJ, Creative Director',
+    url: 'https://ezellfranklin.com',
+  }
+
   return (
     <html lang="en" className={inter.variable}>
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(personSchema) }}
+        />
+      </head>
       <body>
         <Navigation />
         <main className="min-h-screen">
@@ -38,6 +63,7 @@ export default function RootLayout({
         </main>
         <Footer />
         <BookButton />
+        <SubscribeModal />
       </body>
     </html>
   )

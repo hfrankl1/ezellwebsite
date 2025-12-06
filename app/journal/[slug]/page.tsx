@@ -77,7 +77,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 
   return {
-    title: post.title,
+    title: `${post.title} | Journal | Ezell Franklin`,
+    description: `Read ${post.title} on the Ezell Franklin journal. Behind-the-scenes stories, moodboards, and thoughts on art, culture, and music.`,
   }
 }
 

@@ -5,6 +5,8 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { prints } from '@/data/prints'
 import { X } from 'lucide-react'
 
+// Note: Metadata should be in a layout.tsx file for client components
+// For now, we'll add it via next/head or create a layout wrapper
 export default function PrintsPage() {
   const [selectedPrint, setSelectedPrint] = useState<string | null>(null)
   const [showInquiry, setShowInquiry] = useState(false)
@@ -70,27 +72,28 @@ export default function PrintsPage() {
                     onClick={() => handleInquire(print.id)}
                     className="w-full bg-accent hover:bg-wine-hover text-accent-foreground px-4 py-2 rounded-full text-sm font-medium transition-colors"
                   >
-                    Inquire to Purchase
+                    Inquire About This Print
                   </button>
                 </div>
               </motion.div>
               <h3 className="text-xl font-semibold mb-2">{print.title}</h3>
               <p className="text-sm text-muted-foreground mb-3">{print.description}</p>
-              <div className="flex flex-wrap gap-2 mb-4">
-                {print.sizes.map((size) => (
-                  <span
-                    key={size}
-                    className="text-xs px-2 py-1 bg-white/10 rounded"
-                  >
-                    {size}
-                  </span>
-                ))}
-              </div>
+              
+              {/* Sizes line */}
+              <p className="text-sm text-muted-foreground mb-3">
+                Available sizes: 8×10, 11×14, 16×20, 20×24 (custom sizes available).
+              </p>
+              
+              {/* Purchase instructions */}
+              <p className="text-xs text-muted-foreground/70 mb-4">
+                To purchase, email info@ezellfranklin.com with the print title and size. Custom framing options available on request.
+              </p>
+              
               <button
                 onClick={() => handleInquire(print.id)}
                 className="text-sm text-accent hover:text-wine-hover transition-colors"
               >
-                Inquire to Purchase →
+                Inquire About This Print →
               </button>
             </motion.div>
           ))}
