@@ -58,6 +58,30 @@ const itemVariants = {
 export default function HomePage() {
   const [mode, setMode] = useState<'photos' | 'sounds'>('photos')
 
+  // Get 3 most recent photo collections (last 3 in array)
+  const featuredPhotos = useMemo(() => {
+    return photoCollections.slice(-3).map((collection) => ({
+      id: collection.slug,
+      image: collection.coverImage,
+      headline: collection.title,
+      description: collection.description,
+      alt: `${collection.title} - ${collection.category}`,
+      link: `/photos/${collection.slug}`,
+    }))
+  }, [])
+
+  // Get 3 most recent DJ sets (last 3 in array)
+  const featuredSounds = useMemo(() => {
+    return djSets.slice(-3).map((set) => ({
+      id: set.slug,
+      headline: set.title,
+      description: set.description,
+      link: `/sounds#${set.slug}`,
+      genreTags: set.genreTags,
+      vibe: set.vibe,
+    }))
+  }, [])
+
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
