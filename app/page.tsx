@@ -228,20 +228,20 @@ export default function HomePage() {
                   </p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 max-w-6xl mx-auto">
                   {featuredPhotos.map((work, index) => (
                     <motion.div
                       key={work.id}
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.6, delay: index * 0.1 }}
+                      className="w-full"
                     >
                       <Link href={work.link} className="group block">
                         <motion.div
                           whileHover={{ y: -4 }}
                           transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-                          className="relative aspect-[4/3] overflow-hidden rounded-lg bg-card border border-border shadow-lg mb-4"
-                          style={{ transform: 'scale(1.4)', transformOrigin: 'center' }}
+                          className="relative aspect-[4/3] overflow-hidden rounded-lg bg-card border border-border shadow-lg mb-4 w-full"
                         >
                           <Image
                             src={work.image}
