@@ -17,7 +17,6 @@ export const siteConfig = {
     { label: 'Sounds', href: '/sounds' },
     { label: 'Journal', href: '/journal' },
     { label: 'About', href: '/about' },
-    { label: 'Bookings', href: '/bookings' },
   ],
 
   socialLinks: {
