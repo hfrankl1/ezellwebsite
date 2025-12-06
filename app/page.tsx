@@ -3,7 +3,43 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
+import Image from 'next/image'
 import { photoCollections } from '@/data/photos'
+
+const featuredWork = [
+  {
+    id: 1,
+    image: '/images/lillian-7.jpg',
+    headline: 'Romantic Minimalism, Reimagined.',
+    description: 'Soft power, sculpted light, and intentional florals in conversation.',
+    alt: 'Portrait of a woman reclining among gold and floral arrangements.',
+    link: '/photos',
+  },
+  {
+    id: 2,
+    image: '/images/amari_dark.jpg',
+    headline: 'Color Stories With Emotional Weight.',
+    description: 'Beauty portraiture where contrast, texture, and expression do the talking.',
+    alt: 'Close beauty portrait with bold red makeup and hands resting on a shoulder.',
+    link: '/photos',
+  },
+  {
+    id: 3,
+    image: '/images/Elexus_Finalv2.jpg',
+    headline: 'Simplicity as a Statement.',
+    description: 'Clean lines, precise light, and a profile that feels both calm and electric.',
+    alt: 'Profile portrait of a woman with teal makeup on a teal background.',
+    link: '/photos',
+  },
+  {
+    id: 4,
+    image: '/images/Faben4.jpg',
+    headline: 'Where Imagery Becomes Myth.',
+    description: 'Conceptual portraiture shaped through color, pattern, and ritual detail.',
+    alt: 'Woman lying in a circular floral composition surrounded by leaves and flowers.',
+    link: '/photos',
+  },
+]
 
 const comingSoonCards = [
   {
@@ -165,6 +201,61 @@ export default function HomePage() {
           transition={{ duration: 0.5 }}
           className="absolute inset-0 -z-10"
         />
+      </section>
+
+      {/* Featured Work Section */}
+      <section className="py-20 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-12"
+          >
+            <h2 className="text-3xl md:text-4xl font-bold mb-3">Featured Work</h2>
+            <p className="text-sm text-muted-foreground">
+              A few frames that hold the energy of what I make.
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
+            {featuredWork.map((work, index) => (
+              <motion.div
+                key={work.id}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
+              >
+                <Link href={work.link} className="group block">
+                  <motion.div
+                    whileHover={{ y: -4 }}
+                    transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+                    className="relative aspect-[4/3] overflow-hidden rounded-lg bg-card border border-border shadow-lg mb-4"
+                  >
+                    <Image
+                      src={work.image}
+                      alt={work.alt}
+                      fill
+                      className="object-cover group-hover:scale-105 transition-transform duration-500"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                  </motion.div>
+                  <div className="px-2">
+                    <h3 className="text-xl font-semibold mb-2 group-hover:text-accent transition-colors">
+                      {work.headline}
+                    </h3>
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      {work.description}
+                    </p>
+                  </div>
+                </Link>
+              </motion.div>
+            ))}
+          </div>
+        </div>
       </section>
 
       {/* Content Section */}
