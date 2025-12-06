@@ -82,7 +82,7 @@ export default function HomePage() {
 
           <motion.p
             variants={itemVariants}
-            className="text-base md:text-lg text-muted-foreground/80 mb-8 max-w-2xl mx-auto"
+            className="text-base md:text-lg text-muted-foreground/80 mb-6 max-w-2xl mx-auto"
           >
             I create images and sets that move like conversations—intimate, cinematic, and intentional.
           </motion.p>
@@ -90,7 +90,7 @@ export default function HomePage() {
           {/* CTAs */}
           <motion.div
             variants={itemVariants}
-            className="flex flex-wrap items-center justify-center gap-4 mb-8"
+            className="flex flex-wrap items-center justify-center gap-4 mb-4"
           >
             <Link
               href="/bookings"
