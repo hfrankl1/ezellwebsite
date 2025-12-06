@@ -1,13 +1,20 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X } from 'lucide-react'
+
+const AUDIENCEFUL_ENDPOINT = 'https://app.audienceful.com/api/subscribe/kDVh5t65xN9xi6rSxUMwWC/'
+const MIN_SUBMIT_TIME_MS = 1500 // 1.5 seconds
 
 export default function SubscribeModal() {
   const [isOpen, setIsOpen] = useState(false)
   const [email, setEmail] = useState('')
   const [submitted, setSubmitted] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [formReadyAt, setFormReadyAt] = useState<number | null>(null)
+  const honeypotRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     // Check if user has already seen the modal (using localStorage)
@@ -17,6 +24,8 @@ export default function SubscribeModal() {
       // Show modal after a short delay to let page load
       const timer = setTimeout(() => {
         setIsOpen(true)
+        // Track when form becomes ready (after modal opens)
+        setFormReadyAt(Date.now())
       }, 2000) // 2 second delay
       
       return () => clearTimeout(timer)
@@ -30,15 +39,62 @@ export default function SubscribeModal() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // TODO: Wire up backend integration for email capture
-    console.log('Email submitted from modal:', email)
-    setSubmitted(true)
-    setEmail('')
-    
-    setTimeout(() => {
-      setSubmitted(false)
-      handleClose()
-    }, 1500)
+    setError(null)
+
+    // Bot check 1: Honeypot
+    if (honeypotRef.current?.value) {
+      // Bot detected - silently fail
+      return
+    }
+
+    // Bot check 2: Time-based check
+    if (!formReadyAt) {
+      setError('Please wait a moment before submitting.')
+      return
+    }
+
+    const elapsed = Date.now() - formReadyAt
+    if (elapsed < MIN_SUBMIT_TIME_MS) {
+      // Suspiciously fast submission - silently fail
+      return
+    }
+
+    // Validation
+    if (!email || !email.includes('@')) {
+      setError('Please enter a valid email address.')
+      return
+    }
+
+    setIsLoading(true)
+
+    try {
+      // Create FormData for Audienceful
+      const formData = new FormData()
+      formData.append('email', email)
+
+      const response = await fetch(AUDIENCEFUL_ENDPOINT, {
+        method: 'POST',
+        body: formData,
+      })
+
+      if (!response.ok) {
+        throw new Error('Subscription failed. Please try again.')
+      }
+
+      // Success
+      setSubmitted(true)
+      setEmail('')
+      
+      setTimeout(() => {
+        setSubmitted(false)
+        handleClose()
+      }, 1500)
+    } catch (err) {
+      setError('Something went wrong. Please try again.')
+      console.error('Subscription error:', err)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
@@ -86,24 +142,41 @@ export default function SubscribeModal() {
                     animate={{ opacity: 1, y: 0 }}
                     className="text-center py-4"
                   >
-                    <p className="text-accent font-medium">Thanks for joining!</p>
+                    <p className="text-accent font-medium">You're on the list</p>
                   </motion.div>
                 ) : (
-                  <form onSubmit={handleSubmit} className="space-y-4">
+                  <form onSubmit={handleSubmit} className="space-y-4 relative">
+                    {/* Honeypot field */}
+                    <div style={{ position: 'absolute', left: '-5000px' }} aria-hidden="true">
+                      <input
+                        type="text"
+                        name="b28-ft"
+                        tabIndex={-1}
+                        autoComplete="off"
+                        ref={honeypotRef}
+                      />
+                    </div>
+
                     <input
                       type="email"
+                      name="email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder="Your email"
                       required
                       autoFocus
-                      className="w-full bg-background border border-border rounded px-4 py-3 text-sm focus:outline-none focus:border-accent text-foreground placeholder:text-muted-foreground"
+                      disabled={isLoading || submitted}
+                      className="w-full bg-background border border-border rounded px-4 py-3 text-sm focus:outline-none focus:border-accent text-foreground placeholder:text-muted-foreground disabled:opacity-50"
                     />
+                    {error && (
+                      <p className="text-sm text-red-400">{error}</p>
+                    )}
                     <button
                       type="submit"
-                      className="w-full bg-accent hover:bg-wine-hover text-accent-foreground px-6 py-3 rounded-full text-sm font-medium transition-colors"
+                      disabled={isLoading || submitted}
+                      className="w-full bg-accent hover:bg-wine-hover text-accent-foreground px-6 py-3 rounded-full text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      Join the List
+                      {isLoading ? 'Joining...' : 'Join the List'}
                     </button>
                   </form>
                 )}

@@ -1,20 +1,79 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { siteConfig } from '@/config/site'
+
+const AUDIENCEFUL_ENDPOINT = 'https://app.audienceful.com/api/subscribe/kDVh5t65xN9xi6rSxUMwWC/'
+const MIN_SUBMIT_TIME_MS = 1500 // 1.5 seconds
 
 export default function Footer() {
   const [email, setEmail] = useState('')
   const [submitted, setSubmitted] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [formReadyAt, setFormReadyAt] = useState<number | null>(null)
+  const honeypotRef = useRef<HTMLInputElement>(null)
+
+  useEffect(() => {
+    // Track when form becomes ready
+    setFormReadyAt(Date.now())
+  }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // TODO: Wire up backend integration for email capture
-    console.log('Email submitted:', email)
-    setSubmitted(true)
-    setEmail('')
-    setTimeout(() => setSubmitted(false), 3000)
+    setError(null)
+
+    // Bot check 1: Honeypot
+    if (honeypotRef.current?.value) {
+      // Bot detected - silently fail
+      return
+    }
+
+    // Bot check 2: Time-based check
+    if (!formReadyAt) {
+      setError('Please wait a moment before submitting.')
+      return
+    }
+
+    const elapsed = Date.now() - formReadyAt
+    if (elapsed < MIN_SUBMIT_TIME_MS) {
+      // Suspiciously fast submission - silently fail
+      return
+    }
+
+    // Validation
+    if (!email || !email.includes('@')) {
+      setError('Please enter a valid email address.')
+      return
+    }
+
+    setIsLoading(true)
+
+    try {
+      // Create FormData for Audienceful
+      const formData = new FormData()
+      formData.append('email', email)
+
+      const response = await fetch(AUDIENCEFUL_ENDPOINT, {
+        method: 'POST',
+        body: formData,
+      })
+
+      if (!response.ok) {
+        throw new Error('Subscription failed. Please try again.')
+      }
+
+      // Success
+      setSubmitted(true)
+      setEmail('')
+      setTimeout(() => setSubmitted(false), 3000)
+    } catch (err) {
+      setError('Something went wrong. Please try again.')
+      console.error('Subscription error:', err)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
@@ -26,22 +85,39 @@ export default function Footer() {
           <p className="text-sm text-muted-foreground mb-4">
             Get updates on new work, sets, and print drops. Occasional notes—no noise.
           </p>
-          <form onSubmit={handleSubmit} className="flex gap-2 max-w-md">
+          <form onSubmit={handleSubmit} className="flex gap-2 max-w-md relative">
+            {/* Honeypot field */}
+            <div style={{ position: 'absolute', left: '-5000px' }} aria-hidden="true">
+              <input
+                type="text"
+                name="b28-ft"
+                tabIndex={-1}
+                autoComplete="off"
+                ref={honeypotRef}
+              />
+            </div>
+
             <input
               type="email"
+              name="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Your email"
               required
-              className="flex-1 bg-card border border-border rounded px-4 py-2 text-sm focus:outline-none focus:border-accent text-foreground placeholder:text-muted-foreground"
+              disabled={isLoading || submitted}
+              className="flex-1 bg-card border border-border rounded px-4 py-2 text-sm focus:outline-none focus:border-accent text-foreground placeholder:text-muted-foreground disabled:opacity-50"
             />
             <button
               type="submit"
-              className="bg-accent hover:bg-wine-hover text-accent-foreground px-6 py-2 rounded text-sm font-medium transition-colors"
+              disabled={isLoading || submitted}
+              className="bg-accent hover:bg-wine-hover text-accent-foreground px-6 py-2 rounded text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {submitted ? 'Joined!' : 'Join the List'}
+              {isLoading ? 'Joining...' : submitted ? 'Joined!' : 'Join the List'}
             </button>
           </form>
+          {error && (
+            <p className="text-sm text-red-400 mt-2">{error}</p>
+          )}
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
