@@ -6,6 +6,7 @@ import { X } from 'lucide-react'
 
 const SUBSCRIBE_API = '/api/subscribe'
 const MIN_SUBMIT_TIME_MS = 1500 // 1.5 seconds
+const POPUP_COOLDOWN_DAYS = 14 // Days before showing popup again
 
 export default function SubscribeModal() {
   const [isOpen, setIsOpen] = useState(false)
@@ -20,24 +21,40 @@ export default function SubscribeModal() {
     // Only run on client side
     if (typeof window === 'undefined') return
 
-    // Check if user has already seen the modal (using localStorage)
-    const hasSeenModal = localStorage.getItem('hasSeenSubscribeModal')
-    
-    if (!hasSeenModal) {
-      // Show modal after a short delay to let page load
-      const timer = setTimeout(() => {
-        setIsOpen(true)
-        // Track when form becomes ready (after modal opens)
-        setFormReadyAt(Date.now())
-      }, 2000) // 2 second delay
+    // Check if popup should be shown
+    const checkPopupStatus = () => {
+      const popupSeen = localStorage.getItem('popup_seen')
       
-      return () => clearTimeout(timer)
+      if (!popupSeen) {
+        // Never seen before, show after delay
+        const timer = setTimeout(() => {
+          setIsOpen(true)
+          setFormReadyAt(Date.now())
+        }, 2000) // 2 second delay
+        return () => clearTimeout(timer)
+      }
+
+      // Check if cooldown period has passed
+      const lastSeen = parseInt(popupSeen, 10)
+      const daysSinceSeen = (Date.now() - lastSeen) / (1000 * 60 * 60 * 24)
+      
+      if (daysSinceSeen >= POPUP_COOLDOWN_DAYS) {
+        // Cooldown expired, show after delay
+        const timer = setTimeout(() => {
+          setIsOpen(true)
+          setFormReadyAt(Date.now())
+        }, 2000)
+        return () => clearTimeout(timer)
+      }
     }
+
+    checkPopupStatus()
   }, [])
 
   const handleClose = () => {
     setIsOpen(false)
-    localStorage.setItem('hasSeenSubscribeModal', 'true')
+    // Store timestamp when closed
+    localStorage.setItem('popup_seen', Date.now().toString())
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -90,6 +107,9 @@ export default function SubscribeModal() {
       setEmail('')
       setError(null)
       
+      // Store timestamp when subscribed
+      localStorage.setItem('popup_seen', Date.now().toString())
+      
       setTimeout(() => {
         setSubmitted(false)
         handleClose()
@@ -136,9 +156,9 @@ export default function SubscribeModal() {
 
               {/* Content */}
               <div className="pr-8">
-                <h2 className="text-2xl font-bold mb-2">Stay in the conversation</h2>
+                <h2 className="text-2xl font-bold mb-2">Stay in the Conversation</h2>
                 <p className="text-sm text-muted-foreground mb-6">
-                  Get updates on new work, sets, and print drops. Occasional notes—no noise.
+                  Get updates on new work, sets, and print drops.
                 </p>
 
                 {submitted ? (
@@ -176,13 +196,22 @@ export default function SubscribeModal() {
                     {error && (
                       <p className="text-sm text-red-400">{error}</p>
                     )}
-                    <button
-                      type="submit"
-                      disabled={isLoading || submitted}
-                      className="w-full bg-accent hover:bg-wine-hover text-accent-foreground px-6 py-3 rounded-full text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                      {isLoading ? 'Joining...' : 'Join the List'}
-                    </button>
+                    <div className="flex gap-2">
+                      <button
+                        type="submit"
+                        disabled={isLoading || submitted}
+                        className="flex-1 bg-accent hover:bg-wine-hover text-accent-foreground px-6 py-3 rounded-full text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        {isLoading ? 'Subscribing...' : 'Subscribe'}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={handleClose}
+                        className="px-6 py-3 rounded-full text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+                      >
+                        Not now
+                      </button>
+                    </div>
                   </form>
                 )}
               </div>
@@ -193,4 +222,3 @@ export default function SubscribeModal() {
     </AnimatePresence>
   )
 }
-
