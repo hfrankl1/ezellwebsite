@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { siteConfig } from '@/config/site'
 
-const AUDIENCEFUL_ENDPOINT = 'https://app.audienceful.com/api/subscribe/kDVh5t65xN9xi6rSxUMwWC/'
+const SUBSCRIBE_API = '/api/subscribe'
 const MIN_SUBMIT_TIME_MS = 1500 // 1.5 seconds
 
 export default function Footer() {
@@ -51,25 +51,26 @@ export default function Footer() {
     setIsLoading(true)
 
     try {
-      // Create FormData for Audienceful
-      const formData = new FormData()
-      formData.append('email', email)
-
-      const response = await fetch(AUDIENCEFUL_ENDPOINT, {
+      const response = await fetch(SUBSCRIBE_API, {
         method: 'POST',
-        body: formData,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
       })
 
-      if (!response.ok) {
-        throw new Error('Subscription failed. Please try again.')
+      const data = await response.json()
+
+      if (!response.ok || !data.success) {
+        throw new Error(data.error || 'Subscription failed. Please try again.')
       }
 
       // Success
       setSubmitted(true)
       setEmail('')
       setTimeout(() => setSubmitted(false), 3000)
-    } catch (err) {
-      setError('Something went wrong. Please try again.')
+    } catch (err: any) {
+      setError(err.message || 'Something went wrong. Please try again.')
       console.error('Subscription error:', err)
     } finally {
       setIsLoading(false)
