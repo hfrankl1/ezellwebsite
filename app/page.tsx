@@ -55,19 +55,47 @@ const itemVariants = {
   },
 }
 
+const featuredPhotos = [
+  {
+    id: 1,
+    image: '/images/lillian-7.jpg',
+    headline: 'Romantic Minimalism, Reimagined.',
+    description: 'Soft power, sculpted light, and intentional florals in conversation.',
+    alt: 'Portrait of a woman reclining among gold and floral arrangements.',
+    link: '/photos',
+  },
+  {
+    id: 2,
+    image: '/images/amari_dark.jpg',
+    headline: 'Color Stories With Emotional Weight.',
+    description: 'Beauty portraiture where contrast, texture, and expression do the talking.',
+    alt: 'Close beauty portrait with bold red makeup and hands resting on a shoulder.',
+    link: '/photos',
+  },
+  {
+    id: 3,
+    image: '/images/Elexus_Finalv2.jpg',
+    headline: 'Simplicity as a Statement.',
+    description: 'Clean lines, precise light, and a profile that feels both calm and electric.',
+    alt: 'Profile portrait of a woman with teal makeup on a teal background.',
+    link: '/photos',
+  },
+  {
+    id: 4,
+    image: '/images/Faben4.jpg',
+    headline: 'Where Imagery Becomes Myth.',
+    description: 'Conceptual portraiture shaped through color, pattern, and ritual detail.',
+    alt: 'Woman lying in a circular floral composition surrounded by leaves and flowers.',
+    link: '/photos',
+  },
+]
+
 export default function HomePage() {
   const [mode, setMode] = useState<'photos' | 'sounds'>('photos')
 
-  // Get 3 most recent photo collections (last 3 in array)
-  const featuredPhotos = useMemo(() => {
-    return photoCollections.slice(-3).map((collection) => ({
-      id: collection.slug,
-      image: collection.coverImage,
-      headline: collection.title,
-      description: collection.description,
-      alt: `${collection.title} - ${collection.category}`,
-      link: `/photos/${collection.slug}`,
-    }))
+  // Get 3 most recent photo collections (last 3 in array) for Selected Collections
+  const recentCollections = useMemo(() => {
+    return photoCollections.slice(-3)
   }, [])
 
   // Get 3 most recent DJ sets (last 3 in array)
@@ -241,8 +269,8 @@ export default function HomePage() {
               <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center">
                 Selected Collections
               </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-                {photoCollections.slice(0, 6).map((collection, index) => (
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+                {recentCollections.map((collection, index) => (
                   <motion.div
                     key={collection.slug}
                     initial={{ opacity: 0, y: 20 }}
