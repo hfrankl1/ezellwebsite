@@ -29,6 +29,12 @@ export default function Navigation() {
                   {item.label}
                 </Link>
               ))}
+              <Link
+                href="/bookings"
+                className="text-sm font-medium text-foreground border border-border hover:border-accent px-4 py-2 rounded-full transition-colors"
+              >
+                Book
+              </Link>
             </div>
 
             {/* Mobile Menu Button */}
@@ -72,6 +78,13 @@ export default function Navigation() {
                     {item.label}
                   </Link>
                 ))}
+                <Link
+                  href="/bookings"
+                  onClick={() => setIsOpen(false)}
+                  className="text-xl font-medium text-foreground border border-border hover:border-accent px-4 py-2 rounded-full transition-colors inline-block w-fit"
+                >
+                  Book
+                </Link>
               </div>
             </motion.div>
           </motion.div>

@@ -30,61 +30,27 @@ function formatBookingEmail(data: any): string {
   lines.push('-'.repeat(50))
   lines.push(`Name: ${data.name}`)
   lines.push(`Email: ${data.email}`)
-  if (data.phone) {
-    lines.push(`Phone: ${data.phone}`)
-  }
   lines.push('')
   
-  // Booking type specific fields
-  if (data.type === 'photography') {
-    lines.push('PHOTOGRAPHY BOOKING DETAILS')
-    lines.push('-'.repeat(50))
-    if (data.sessionType) {
-      lines.push(`Session Type: ${data.sessionType}`)
-    }
-    if (data.date) {
-      lines.push(`Desired Date: ${data.date}`)
-    }
-    if (data.dateRange) {
-      lines.push(`Date Range End: ${data.dateRange}`)
-    }
-    if (data.location) {
-      lines.push(`Location: ${data.location}`)
-    }
-    if (data.referral) {
-      lines.push(`How they heard about you: ${data.referral}`)
-    }
-    if (data.vision) {
-      lines.push('')
-      lines.push('VISION/MESSAGE:')
-      lines.push(data.vision)
-    }
-  } else if (data.type === 'dj') {
-    lines.push('DJ BOOKING DETAILS')
-    lines.push('-'.repeat(50))
-    if (data.setType) {
-      lines.push(`Set Type: ${data.setType}`)
-    }
-    if (data.eventDate) {
-      lines.push(`Event Date: ${data.eventDate}`)
-    }
-    if (data.eventTime) {
-      lines.push(`Event Time: ${data.eventTime}`)
-    }
-    if (data.eventLocation) {
-      lines.push(`Event Location: ${data.eventLocation}`)
-    }
-    if (data.venueType) {
-      lines.push(`Venue Type: ${data.venueType}`)
-    }
-    if (data.djReferral) {
-      lines.push(`How they heard about you: ${data.djReferral}`)
-    }
-    if (data.energy) {
-      lines.push('')
-      lines.push('ENERGY/VIBE REQUESTED:')
-      lines.push(data.energy)
-    }
+  // Booking details
+  lines.push('BOOKING DETAILS')
+  lines.push('-'.repeat(50))
+  if (data.lookingFor) {
+    lines.push(`What they're looking for: ${data.lookingFor}`)
+  }
+  if (data.dateTimeframe) {
+    lines.push(`Preferred date/timeframe: ${data.dateTimeframe}`)
+  }
+  if (data.budget) {
+    lines.push(`Budget: ${data.budget}`)
+  }
+  if (data.referral) {
+    lines.push(`How they found this work: ${data.referral}`)
+  }
+  if (data.vibe) {
+    lines.push('')
+    lines.push('VIBE/MESSAGE:')
+    lines.push(data.vibe)
   }
   
   lines.push('')
@@ -93,6 +59,32 @@ function formatBookingEmail(data: any): string {
   
   return lines.join('\n')
 }
+
+/*
+ * Boilerplate booking reply email template for manual or automated use:
+ * 
+ * Subject: Thanks for reaching out about photos/sounds
+ * 
+ * Hi [Name],
+ * 
+ * Appreciate you reaching out and sharing what you're planning.
+ * 
+ * I've received your note about:
+ * - Type: [Photo session / DJ set / Both]
+ * - Timing: [Their date or timeframe, if provided]
+ * - Vibe: [Short paraphrase or paste from their message]
+ * 
+ * I'll review the details and follow up with:
+ * - A few options based on what you shared
+ * - Rough pricing and timing
+ * - Any questions or ideas to help shape the session or set
+ * 
+ * If there's anything you didn't mention that might be helpful—references, links, or specific shots/songs you have in mind—feel free to reply to this email and add it.
+ * 
+ * Talk soon,
+ * 
+ * Ezell
+ */
 
 /**
  * Creates and returns a Nodemailer transporter
@@ -147,19 +139,18 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Validate message/vision based on booking type
-    if (data.type === 'photography' && !data.vision) {
-      console.error('Validation failed: Missing vision for photography booking')
+    if (!data.lookingFor) {
+      console.error('Validation failed: Missing lookingFor')
       return NextResponse.json(
-        { success: false, error: 'Please describe your vision for the session' },
+        { success: false, error: 'Please select what you\'re looking for' },
         { status: 400 }
       )
     }
 
-    if (data.type === 'dj' && !data.energy) {
-      console.error('Validation failed: Missing energy description for DJ booking')
+    if (!data.vibe) {
+      console.error('Validation failed: Missing vibe')
       return NextResponse.json(
-        { success: false, error: 'Please describe the energy you\'re looking for' },
+        { success: false, error: 'Please tell us about the vibe' },
         { status: 400 }
       )
     }
@@ -196,9 +187,7 @@ export async function POST(request: NextRequest) {
     const emailText = formatBookingEmail(data)
     
     // Determine booking type for subject line
-    const bookingType = data.type === 'photography' 
-      ? (data.sessionType || 'Photography')
-      : (data.setType || 'DJ Set')
+    const bookingType = data.lookingFor || 'Booking Inquiry'
     
     const subject = `New booking inquiry from ${data.name} – ${bookingType}`
 

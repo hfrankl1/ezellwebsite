@@ -3,8 +3,8 @@ import { Suspense } from 'react'
 import BookingsClient from './BookingsClient'
 
 export const metadata: Metadata = {
-  title: 'Book a Session – Photography & DJ Services | Ezell Franklin',
-  description: 'Book a photography session or DJ set with Ezell Franklin. Available for portraits, events, club sets, and private parties.',
+  title: 'Book Photos or Sounds | Ezell Franklin',
+  description: 'Book photo sessions or DJ sets with Ezell Franklin. Share your vision and get a personal reply with options, timing, and next steps.',
 }
 
 export default function BookingsPage() {
