@@ -6,7 +6,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { photoCollections } from '@/data/photos'
 
-const featuredWork = [
+const featuredPhotos = [
   {
     id: 1,
     image: '/images/lillian-7.jpg',
@@ -38,6 +38,33 @@ const featuredWork = [
     description: 'Conceptual portraiture shaped through color, pattern, and ritual detail.',
     alt: 'Woman lying in a circular floral composition surrounded by leaves and flowers.',
     link: '/photos',
+  },
+]
+
+const featuredSounds = [
+  {
+    id: 1,
+    headline: 'Club Sets That Move.',
+    description: 'High-energy blends built for movement—house, hip-hop, edits, and whatever the night calls for.',
+    link: '/sounds',
+  },
+  {
+    id: 2,
+    headline: 'Private Events With Intention.',
+    description: 'Curated sound for spaces that want more than background noise. Weddings, brand events, intimate parties.',
+    link: '/sounds',
+  },
+  {
+    id: 3,
+    headline: 'Amapiano, House, R&B.',
+    description: 'Sets that move through genres with intention. Built for shoulders to loosen and rooms to breathe in unison.',
+    link: '/sounds',
+  },
+  {
+    id: 4,
+    headline: 'Sonic Experiences.',
+    description: 'Listening sessions and creative experiences shaped by mood, energy, and the feeling in the room.',
+    link: '/sounds',
   },
 ]
 
@@ -184,61 +211,6 @@ export default function HomePage() {
         />
       </section>
 
-      {/* Featured Work Section */}
-      <section className="py-12 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-12"
-          >
-            <h2 className="text-3xl md:text-4xl font-bold mb-3">Featured Work</h2>
-            <p className="text-sm text-muted-foreground">
-              A few frames that hold the energy of what I make.
-            </p>
-          </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
-            {featuredWork.map((work, index) => (
-              <motion.div
-                key={work.id}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-              >
-                <Link href={work.link} className="group block">
-                  <motion.div
-                    whileHover={{ y: -4 }}
-                    transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-                    className="relative aspect-[4/3] overflow-hidden rounded-lg bg-card border border-border shadow-lg mb-4"
-                  >
-                    <Image
-                      src={work.image}
-                      alt={work.alt}
-                      fill
-                      className="object-cover group-hover:scale-105 transition-transform duration-500"
-                      sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                  </motion.div>
-                  <div className="px-2">
-                    <h3 className="text-xl font-semibold mb-2 group-hover:text-accent transition-colors">
-                      {work.headline}
-                    </h3>
-                    <p className="text-sm text-muted-foreground leading-relaxed">
-                      {work.description}
-                    </p>
-                  </div>
-                </Link>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* Content Section */}
       <AnimatePresence mode="wait">
         {mode === 'photos' ? (
@@ -248,9 +220,60 @@ export default function HomePage() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.4 }}
-            className="py-20 px-4 sm:px-6 lg:px-8"
+            className="py-12 px-4 sm:px-6 lg:px-8"
           >
             <div className="max-w-7xl mx-auto">
+              {/* Featured Work Section */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+                className="mb-16"
+              >
+                <div className="text-center mb-12">
+                  <h2 className="text-3xl md:text-4xl font-bold mb-3">Featured Work</h2>
+                  <p className="text-sm text-muted-foreground">
+                    A few frames that hold the energy of what I make.
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
+                  {featuredPhotos.map((work, index) => (
+                    <motion.div
+                      key={work.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.6, delay: index * 0.1 }}
+                    >
+                      <Link href={work.link} className="group block">
+                        <motion.div
+                          whileHover={{ y: -4 }}
+                          transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+                          className="relative aspect-[4/3] overflow-hidden rounded-lg bg-card border border-border shadow-lg mb-4"
+                        >
+                          <Image
+                            src={work.image}
+                            alt={work.alt}
+                            fill
+                            className="object-cover group-hover:scale-105 transition-transform duration-500"
+                            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                        </motion.div>
+                        <div className="px-2">
+                          <h3 className="text-xl font-semibold mb-2 group-hover:text-accent transition-colors">
+                            {work.headline}
+                          </h3>
+                          <p className="text-sm text-muted-foreground leading-relaxed">
+                            {work.description}
+                          </p>
+                        </div>
+                      </Link>
+                    </motion.div>
+                  ))}
+                </div>
+              </motion.div>
+
               {/* Photo Collections Teaser */}
               <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center">
                 Selected Collections
@@ -314,9 +337,60 @@ export default function HomePage() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.4 }}
-            className="py-20 px-4 sm:px-6 lg:px-8"
+            className="py-12 px-4 sm:px-6 lg:px-8"
           >
             <div className="max-w-7xl mx-auto">
+              {/* Featured Work Section */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+                className="mb-16"
+              >
+                <div className="text-center mb-12">
+                  <h2 className="text-3xl md:text-4xl font-bold mb-3">Featured Work</h2>
+                  <p className="text-sm text-muted-foreground">
+                    A few sets and experiences that hold the energy of what I make.
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
+                  {featuredSounds.map((work, index) => (
+                    <motion.div
+                      key={work.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.6, delay: index * 0.1 }}
+                    >
+                      <Link href={work.link} className="group block">
+                        <motion.div
+                          whileHover={{ y: -4 }}
+                          transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+                          className="relative aspect-[4/3] overflow-hidden rounded-lg bg-card border border-border shadow-lg mb-4 bg-gradient-to-br from-wine/20 to-background flex items-center justify-center"
+                        >
+                          <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                          <div className="relative z-10 text-center p-8">
+                            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-accent/20 flex items-center justify-center group-hover:bg-accent/30 transition-colors">
+                              <svg className="w-8 h-8 text-accent" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M8 5v14l11-7z"/>
+                              </svg>
+                            </div>
+                          </div>
+                        </motion.div>
+                        <div className="px-2">
+                          <h3 className="text-xl font-semibold mb-2 group-hover:text-accent transition-colors">
+                            {work.headline}
+                          </h3>
+                          <p className="text-sm text-muted-foreground leading-relaxed">
+                            {work.description}
+                          </p>
+                        </div>
+                      </Link>
+                    </motion.div>
+                  ))}
+                </div>
+              </motion.div>
+
               {/* Coming Soon Cards */}
               <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center">
                 DJ Offerings
