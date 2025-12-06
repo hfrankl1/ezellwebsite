@@ -64,7 +64,7 @@ export default function SubscribeModal() {
 
     // Validation
     if (!email || !email.includes('@')) {
-      setError('Please enter a valid email address.')
+      setError('Please enter a valid email address. Please try again.')
       return
     }
 
@@ -82,19 +82,20 @@ export default function SubscribeModal() {
       const data = await response.json()
 
       if (!response.ok || !data.success) {
-        throw new Error(data.error || 'Subscription failed. Please try again.')
+        throw new Error(data.error || 'Email could not be added. Please try again.')
       }
 
       // Success
       setSubmitted(true)
       setEmail('')
+      setError(null)
       
       setTimeout(() => {
         setSubmitted(false)
         handleClose()
-      }, 1500)
+      }, 2000)
     } catch (err: any) {
-      setError(err.message || 'Something went wrong. Please try again.')
+      setError(err.message || 'Email could not be added. Please try again.')
       console.error('Subscription error:', err)
     } finally {
       setIsLoading(false)
@@ -146,7 +147,7 @@ export default function SubscribeModal() {
                     animate={{ opacity: 1, y: 0 }}
                     className="text-center py-4"
                   >
-                    <p className="text-accent font-medium">You&apos;re on the list</p>
+                    <p className="text-green-400 font-medium">Email was added.</p>
                   </motion.div>
                 ) : (
                   <form onSubmit={handleSubmit} className="space-y-4 relative">

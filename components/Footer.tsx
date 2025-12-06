@@ -44,7 +44,7 @@ export default function Footer() {
 
     // Validation
     if (!email || !email.includes('@')) {
-      setError('Please enter a valid email address.')
+      setError('Please enter a valid email address. Please try again.')
       return
     }
 
@@ -62,15 +62,16 @@ export default function Footer() {
       const data = await response.json()
 
       if (!response.ok || !data.success) {
-        throw new Error(data.error || 'Subscription failed. Please try again.')
+        throw new Error(data.error || 'Email could not be added. Please try again.')
       }
 
       // Success
       setSubmitted(true)
       setEmail('')
-      setTimeout(() => setSubmitted(false), 3000)
+      setError(null)
+      setTimeout(() => setSubmitted(false), 5000)
     } catch (err: any) {
-      setError(err.message || 'Something went wrong. Please try again.')
+      setError(err.message || 'Email could not be added. Please try again.')
       console.error('Subscription error:', err)
     } finally {
       setIsLoading(false)
@@ -116,6 +117,9 @@ export default function Footer() {
               {isLoading ? 'Joining...' : submitted ? 'Joined!' : 'Join the List'}
             </button>
           </form>
+          {submitted && (
+            <p className="text-sm text-green-400 mt-2">Email was added.</p>
+          )}
           {error && (
             <p className="text-sm text-red-400 mt-2">{error}</p>
           )}
