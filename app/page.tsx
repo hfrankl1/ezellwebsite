@@ -241,6 +241,7 @@ export default function HomePage() {
                           whileHover={{ y: -4 }}
                           transition={{ type: 'spring', stiffness: 300, damping: 20 }}
                           className="relative aspect-[4/3] overflow-hidden rounded-lg bg-card border border-border shadow-lg mb-4"
+                          style={{ transform: 'scale(1.4)', transformOrigin: 'center' }}
                         >
                           <Image
                             src={work.image}
