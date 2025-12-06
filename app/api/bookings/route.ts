@@ -45,6 +45,9 @@ function formatBookingEmail(data: any): string {
     if (data.date) {
       lines.push(`Desired Date: ${data.date}`)
     }
+    if (data.dateRange) {
+      lines.push(`Date Range End: ${data.dateRange}`)
+    }
     if (data.location) {
       lines.push(`Location: ${data.location}`)
     }

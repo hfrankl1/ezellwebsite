@@ -9,6 +9,8 @@ export default function BookingsClient() {
   const [activeTab, setActiveTab] = useState<'photography' | 'dj'>('photography')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle')
+  const [showOtherReferral, setShowOtherReferral] = useState(false)
+  const [showOtherDJReferral, setShowOtherDJReferral] = useState(false)
 
   useEffect(() => {
     // Check URL for type parameter
@@ -28,6 +30,23 @@ export default function BookingsClient() {
     const formData = new FormData(form)
     const data = Object.fromEntries(formData.entries())
     data.type = activeTab
+
+    // Handle "Other" referral options
+    if (data.referral === 'Other' && data.referralOther) {
+      data.referral = `Other: ${data.referralOther}`
+      delete data.referralOther
+    }
+    if (data.djReferral === 'Other' && data.djReferralOther) {
+      data.djReferral = `Other: ${data.djReferralOther}`
+      delete data.djReferralOther
+    }
+
+    // Combine startTime and endTime for DJ bookings
+    if (data.startTime) {
+      data.eventTime = data.endTime ? `${data.startTime} - ${data.endTime}` : data.startTime
+      delete data.startTime
+      delete data.endTime
+    }
 
     try {
       const response = await fetch('/api/bookings', {
@@ -60,6 +79,8 @@ export default function BookingsClient() {
         // Reset form if it still exists
         if (form) {
           form.reset()
+          setShowOtherReferral(false)
+          setShowOtherDJReferral(false)
         }
       } else {
         console.error('API returned error. Status:', response.status, 'Result:', result)
@@ -94,6 +115,8 @@ export default function BookingsClient() {
             onClick={() => {
               setActiveTab('photography')
               setSubmitStatus('idle')
+              setShowOtherReferral(false)
+              setShowOtherDJReferral(false)
             }}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
@@ -117,6 +140,8 @@ export default function BookingsClient() {
             onClick={() => {
               setActiveTab('dj')
               setSubmitStatus('idle')
+              setShowOtherReferral(false)
+              setShowOtherDJReferral(false)
             }}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
@@ -207,16 +232,30 @@ export default function BookingsClient() {
 
                 <div>
                   <label htmlFor="date" className="block text-sm font-medium mb-2">
-                    Desired Date or Date Range *
+                    Desired Date *
                   </label>
                   <input
-                    type="text"
+                    type="date"
                     id="date"
                     name="date"
                     required
-                    placeholder="e.g., March 15, 2024 or March 15-20, 2024"
+                    min={new Date().toISOString().split('T')[0]}
                     className="w-full bg-card border border-border rounded px-4 py-3 focus:outline-none focus:border-accent transition-colors text-foreground"
                   />
+                </div>
+                
+                <div>
+                  <label htmlFor="dateRange" className="block text-sm font-medium mb-2">
+                    Date Range (if flexible)
+                  </label>
+                  <input
+                    type="date"
+                    id="dateRange"
+                    name="dateRange"
+                    min={new Date().toISOString().split('T')[0]}
+                    className="w-full bg-card border border-border rounded px-4 py-3 focus:outline-none focus:border-accent transition-colors text-foreground"
+                  />
+                  <p className="text-xs text-muted-foreground mt-1">Leave blank if you have a specific date</p>
                 </div>
 
                 <div>
@@ -237,12 +276,28 @@ export default function BookingsClient() {
                   <label htmlFor="referral" className="block text-sm font-medium mb-2">
                     How did you hear about Ezell?
                   </label>
-                  <input
-                    type="text"
+                  <select
                     id="referral"
                     name="referral"
+                    onChange={(e) => setShowOtherReferral(e.target.value === 'Other')}
                     className="w-full bg-card border border-border rounded px-4 py-3 focus:outline-none focus:border-accent transition-colors text-foreground"
-                  />
+                  >
+                    <option value="">Select an option</option>
+                    <option value="Instagram">Instagram</option>
+                    <option value="Referral/Friend">Referral/Friend</option>
+                    <option value="Website">Website</option>
+                    <option value="Previous Client">Previous Client</option>
+                    <option value="Social Media">Social Media (other)</option>
+                    <option value="Other">Other</option>
+                  </select>
+                  {showOtherReferral && (
+                    <input
+                      type="text"
+                      name="referralOther"
+                      placeholder="Please specify..."
+                      className="w-full bg-card border border-border rounded px-4 py-3 mt-2 focus:outline-none focus:border-accent transition-colors text-foreground"
+                    />
+                  )}
                 </div>
 
                 <div>
@@ -295,14 +350,31 @@ export default function BookingsClient() {
                   <label htmlFor="eventTime" className="block text-sm font-medium mb-2">
                     Event Time *
                   </label>
-                  <input
-                    type="text"
-                    id="eventTime"
-                    name="eventTime"
-                    required
-                    placeholder="e.g., 9:00 PM - 2:00 AM"
-                    className="w-full bg-card border border-border rounded px-4 py-3 focus:outline-none focus:border-accent transition-colors text-foreground"
-                  />
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label htmlFor="startTime" className="block text-xs text-muted-foreground mb-1">
+                        Start Time
+                      </label>
+                      <input
+                        type="time"
+                        id="startTime"
+                        name="startTime"
+                        required
+                        className="w-full bg-card border border-border rounded px-4 py-3 focus:outline-none focus:border-accent transition-colors text-foreground"
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor="endTime" className="block text-xs text-muted-foreground mb-1">
+                        End Time (approx.)
+                      </label>
+                      <input
+                        type="time"
+                        id="endTime"
+                        name="endTime"
+                        className="w-full bg-card border border-border rounded px-4 py-3 focus:outline-none focus:border-accent transition-colors text-foreground"
+                      />
+                    </div>
+                  </div>
                 </div>
 
                 <div>
@@ -342,12 +414,28 @@ export default function BookingsClient() {
                   <label htmlFor="djReferral" className="block text-sm font-medium mb-2">
                     How did you hear about Ez and Lz?
                   </label>
-                  <input
-                    type="text"
+                  <select
                     id="djReferral"
                     name="djReferral"
+                    onChange={(e) => setShowOtherDJReferral(e.target.value === 'Other')}
                     className="w-full bg-card border border-border rounded px-4 py-3 focus:outline-none focus:border-accent transition-colors text-foreground"
-                  />
+                  >
+                    <option value="">Select an option</option>
+                    <option value="Instagram">Instagram</option>
+                    <option value="Referral/Friend">Referral/Friend</option>
+                    <option value="Website">Website</option>
+                    <option value="Previous Client">Previous Client</option>
+                    <option value="Social Media">Social Media (other)</option>
+                    <option value="Other">Other</option>
+                  </select>
+                  {showOtherDJReferral && (
+                    <input
+                      type="text"
+                      name="djReferralOther"
+                      placeholder="Please specify..."
+                      className="w-full bg-card border border-border rounded px-4 py-3 mt-2 focus:outline-none focus:border-accent transition-colors text-foreground"
+                    />
+                  )}
                 </div>
 
                 <div>
