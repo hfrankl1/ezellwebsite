@@ -95,23 +95,23 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
-      <section className="h-screen flex flex-col items-center justify-center relative overflow-hidden">
+      <section className="pt-32 pb-12 px-4 sm:px-6 lg:px-8 relative">
         <motion.div
           variants={containerVariants}
           initial="hidden"
           animate="visible"
-          className="text-center z-10 px-4 max-w-4xl"
+          className="text-center z-10 max-w-4xl mx-auto"
         >
           <motion.h1
             variants={itemVariants}
-            className="text-5xl md:text-7xl font-bold mb-6"
+            className="text-5xl md:text-7xl font-bold mb-3"
           >
             Ezell Franklin
           </motion.h1>
 
           <motion.p
             variants={itemVariants}
-            className="text-lg md:text-xl text-muted-foreground mb-4"
+            className="text-lg md:text-xl text-muted-foreground mb-2"
           >
             Photography, sound, and creative direction shaped by feeling, mood, and craft.
           </motion.p>
@@ -122,25 +122,6 @@ export default function HomePage() {
           >
             I create images and sets that move like conversations—intimate, cinematic, and intentional.
           </motion.p>
-
-          {/* CTAs */}
-          <motion.div
-            variants={itemVariants}
-            className="flex flex-wrap items-center justify-center gap-4 mb-4"
-          >
-            <Link
-              href="/bookings"
-              className="bg-accent hover:bg-wine-hover text-accent-foreground px-8 py-3 rounded-full font-medium transition-colors shadow-lg"
-            >
-              Book Photos or Sounds
-            </Link>
-            <Link
-              href="/photos"
-              className="bg-transparent border border-border hover:border-accent text-foreground px-8 py-3 rounded-full font-medium transition-colors"
-            >
-              View the Work
-            </Link>
-          </motion.div>
 
           {/* Toggle Switch */}
           <motion.div
@@ -195,8 +176,8 @@ export default function HomePage() {
         <motion.div
           animate={{
             backgroundColor: mode === 'photos' 
-              ? 'hsl(350, 65%, 35%, 0.1)' 
-              : 'hsl(350, 65%, 35%, 0.15)',
+              ? 'hsl(350, 65%, 35%, 0.05)' 
+              : 'hsl(350, 65%, 35%, 0.08)',
           }}
           transition={{ duration: 0.5 }}
           className="absolute inset-0 -z-10"
@@ -204,7 +185,7 @@ export default function HomePage() {
       </section>
 
       {/* Featured Work Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8">
+      <section className="py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
