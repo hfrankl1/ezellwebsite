@@ -6,13 +6,12 @@ export const metadata: Metadata = {
   description: 'Behind-the-scenes stories, moodboards, and thoughts on art, culture, and music from photographer and DJ Ezell Franklin.',
 }
 
-// For now, we'll use a simple array. In production, you'd read from MDX files
 const journalPosts = [
   {
     slug: 'full-set-live-session',
     title: 'Full Set: Live Session',
     date: '2024-01-20',
-    excerpt: 'A full recording from a recent night—energy, transitions, and the room's evolution.',
+    excerpt: 'A full recording from a recent night - energy, transitions, and the room\'s evolution.',
     tags: ['Music', 'DJ Set', 'Live'],
   },
   {
