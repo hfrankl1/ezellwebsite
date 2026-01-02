@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { siteConfig } from '@/config/site'
+import YouTubeEmbed from '@/components/YouTubeEmbed'
 
 const comingSoonCards = [
   {
@@ -64,6 +65,32 @@ export default function SoundsPage() {
           >
             Live sets and mixes are coming soon.
           </motion.p>
+        </motion.div>
+
+        {/* Latest Set Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.35, duration: 0.6 }}
+          className="mb-16 max-w-4xl mx-auto"
+        >
+          <h2 className="text-3xl md:text-4xl font-bold mb-3 text-center">Latest Set</h2>
+          <p className="text-muted-foreground text-center mb-6">
+            A full-length session—capturing the arc of the night from start to finish.
+          </p>
+          <div className="mb-4">
+            <YouTubeEmbed videoId="5Y8d5RM7SPw" title="Full DJ Set" />
+          </div>
+          <div className="text-center">
+            <a
+              href="https://www.youtube.com/watch?v=5Y8d5RM7SPw"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm text-muted-foreground hover:text-accent transition-colors"
+            >
+              Watch on YouTube
+            </a>
+          </div>
         </motion.div>
 
         {/* Coming Soon Cards */}

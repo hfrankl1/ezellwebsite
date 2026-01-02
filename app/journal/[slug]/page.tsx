@@ -1,6 +1,7 @@
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
+import YouTubeEmbed from '@/components/YouTubeEmbed'
 
 interface PageProps {
   params: {
@@ -9,7 +10,7 @@ interface PageProps {
 }
 
 // In production, you'd read from MDX files
-const journalPosts: Record<string, { title: string; date: string; content: string }> = {
+const journalPosts: Record<string, { title: string; date: string; content: string; videoId?: string }> = {
   'the-dual-identity': {
     title: 'The Dual Identity',
     date: '2024-01-15',
@@ -57,6 +58,22 @@ From behind the camera, I capture the energy, the movement, the moments of conne
 There's something beautiful about a room full of people moving together, lost in the music. It's temporary—the moment will pass, the night will end—but the feeling lingers. That's what I'm trying to capture, both in my photos and in my sets.
 
 Nightlife culture is about more than just partying. It's about finding your people, expressing yourself, and creating memories that last long after the lights come on.
+    `.trim(),
+  },
+  'full-set-live-session': {
+    title: 'Full Set: Live Session',
+    date: '2024-01-20',
+    videoId: '5Y8d5RM7SPw',
+    content: `
+# Full Set: Live Session
+
+A full recording from a recent night—energy, transitions, and the room's evolution.
+
+There's something different about a full-length set compared to a curated mix. It's not just about the tracks—it's about the journey. The way the energy builds and shifts. The moments of connection between songs. The way the room responds and evolves throughout the night.
+
+This recording captures that arc. From the opening moments when people are still finding their place, to the peak when everything clicks and the room moves as one, to the closing tracks that bring it all back down. It's all there—the transitions, the energy, the flow.
+
+A set is a conversation. With the music, with the room, with yourself. This is one of those conversations.
     `.trim(),
   },
 }
@@ -134,6 +151,21 @@ export default function JournalPostPage({ params }: PageProps) {
               }
               return null
             })}
+            {post.videoId && (
+              <div className="my-8">
+                <YouTubeEmbed videoId={post.videoId} title={post.title} />
+                <div className="mt-4 text-center">
+                  <a
+                    href={`https://www.youtube.com/watch?v=${post.videoId}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm text-muted-foreground hover:text-accent transition-colors"
+                  >
+                    Watch on YouTube
+                  </a>
+                </div>
+              </div>
+            )}
           </div>
         </article>
       </div>

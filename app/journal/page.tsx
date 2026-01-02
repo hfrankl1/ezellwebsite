@@ -9,6 +9,13 @@ export const metadata: Metadata = {
 // For now, we'll use a simple array. In production, you'd read from MDX files
 const journalPosts = [
   {
+    slug: 'full-set-live-session',
+    title: 'Full Set: Live Session',
+    date: '2024-01-20',
+    excerpt: 'A full recording from a recent night—energy, transitions, and the room's evolution.',
+    tags: ['Music', 'DJ Set', 'Live'],
+  },
+  {
     slug: 'the-dual-identity',
     title: 'The Dual Identity',
     date: '2024-01-15',
